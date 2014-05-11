@@ -1,0 +1,14 @@
+<html>
+	<head>
+		<title>Code</title>
+	</head>
+	<body>
+		<p>OJ Editor</p>
+		<form method="POST" action="/Code/Submit" >
+			{{if .errors}}<p>{{.errors.outErr}}</p>{{end}}
+			<textarea name="code">
+			</textarea>
+			<button type="submit">submit</button>
+		</form>
+	</body>
+</html>

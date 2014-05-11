@@ -1,0 +1,12 @@
+[deps]
+github.com/revel/revel = 
+
+[res]
+include = public|conf
+
+[project]
+localPath = /home/mike/go/src/github.com/ggaaooppeenngg/OJ
+
+[cmd]
+run = revel run OJ
+
