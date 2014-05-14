@@ -1,3 +1,6 @@
 test-results/
 tmp/
 routes/
+src/github.com/*
+src/code.google.com/p/*
+bin/*

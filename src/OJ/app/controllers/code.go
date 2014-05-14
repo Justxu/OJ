@@ -3,10 +3,11 @@ package controllers
 import (
 	"fmt"
 
-	"github.com/ggaaooppeenngg/OJ/app/routes"
 	"github.com/ggaaooppeenngg/util"
-
 	"github.com/revel/revel"
+
+	"OJ/app/models"
+	"OJ/app/routes"
 )
 
 type Code struct {
@@ -16,10 +17,14 @@ type Code struct {
 func (c *Code) Index() revel.Result {
 	return c.Render()
 }
+
 func (c *Code) Submit(code string) revel.Result {
 	fmt.Printf("%s", code)
 	fmt.Println("submit")
 	fmt.Println(util.Pwd())
+	source := &models.source{}
+	path := code.GenPath()
+	util.WriteFile(path, []byte(code))
 	util.WriteFile("github.com/ggaaooppeenngg/OJ/tmp/main.go", []byte(code))
 	out, _ := util.Run("go", "run", "github.com/ggaaooppeenngg/OJ/tmp/main.go")
 	err := &revel.ValidationError{
