@@ -1,0 +1,15 @@
+[postgres]
+user=postgres
+password=postgres
+dbname=finances
+sslmode=disable
+show_err=true
+
+[smtp]
+smtp.username=someone@example.com
+smtp.password=password
+smtp.host=smtp.gmail.com
+smtp.address=smtp.gmail.com:25
+smtp.from=someone@example.com
+
+

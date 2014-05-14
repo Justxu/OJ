@@ -22,16 +22,14 @@ func (c *Code) Submit(code string) revel.Result {
 	fmt.Printf("%s", code)
 	fmt.Println("submit")
 	fmt.Println(util.Pwd())
-	source := &models.source{}
-	path := code.GenPath()
+	source := &models.Source{}
+	path := source.GenPath()
 	util.WriteFile(path, []byte(code))
-	util.WriteFile("github.com/ggaaooppeenngg/OJ/tmp/main.go", []byte(code))
-	out, _ := util.Run("go", "run", "github.com/ggaaooppeenngg/OJ/tmp/main.go")
+	out, _ := util.Run("go", "run", path)
 	err := &revel.ValidationError{
 		Message: string(out),
 		Key:     "outErr",
 	}
-	fmt.Println(string(out))
 	c.Validation.Errors = append(c.Validation.Errors, err)
 	if c.Validation.HasErrors() {
 		c.Validation.Keep()

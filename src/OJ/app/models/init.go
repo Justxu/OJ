@@ -2,9 +2,9 @@ package models
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/go-xorm/xorm"
+	_ "github.com/lib/pq"
 	"github.com/revel/config"
 )
 
@@ -17,8 +17,7 @@ func Engine() *xorm.Engine {
 }
 func init() {
 	var err error
-	path, _ := filepath.Abs("")
-	c, err := config.ReadDefault(fmt.Sprintf("%s/src/finances/conf/misc.conf", path))
+	c, err := config.ReadDefault("conf/misc.conf")
 	if err != nil {
 		panic(err)
 	}
@@ -26,7 +25,7 @@ func init() {
 		panic("conf path not founded.")
 	}
 	user, _ := c.String("postgres", "user")
-	password, _ := c.String("postgres", "user")
+	password, _ := c.String("postgres", "password")
 	dbname, _ := c.String("postgres", "dbname")
 	sslmode, _ := c.String("postgres", "sslmode")
 	dataSource := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=%s", user, password, dbname, sslmode)
@@ -35,7 +34,8 @@ func init() {
 		panic(err)
 	}
 	showSQL, _ := c.Bool("postgres", "show_sql")
-	err = engine.Sync(new(Code))
+	engine.ShowSQL = showSQL
+	err = engine.Sync(new(Source))
 	if err != nil {
 		panic(err)
 	}

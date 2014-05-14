@@ -3,4 +3,7 @@ tmp/
 routes/
 src/github.com/*
 src/code.google.com/p/*
+src/OJ/code/*
 bin/*
+app.conf
+misc.conf

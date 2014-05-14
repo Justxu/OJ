@@ -5,13 +5,12 @@ import (
 	"time"
 
 	"code.google.com/p/go-uuid/uuid"
-	"github.com/go-xorm/xorm"
 )
 
 func UUPath() string {
 	ui := uuid.NewUUID()
-	ui = strings.Replace(ui, "-", "", -1)
-	return ui + "/main.go"
+	path := strings.Replace(ui.String(), "-", "", -1)
+	return path + "/main.go"
 }
 
 type Source struct {
