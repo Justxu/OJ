@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/ggaaooppeenngg/util"
 	"github.com/revel/revel"
@@ -19,21 +20,19 @@ func (c *Code) Index() revel.Result {
 }
 
 func (c *Code) Submit(code string) revel.Result {
-	fmt.Printf("%s", code)
 	fmt.Println("submit")
-	fmt.Println(util.Pwd())
 	source := &models.Source{}
 	path := source.GenPath()
+	source.CreatedAt = time.Now()
+	source.Status = models.UnHandled
+	//我自己
+	source.UserId = 1
 	util.WriteFile(path, []byte(code))
-	out, _ := util.Run("go", "run", path)
-	err := &revel.ValidationError{
-		Message: string(out),
-		Key:     "outErr",
-	}
-	c.Validation.Errors = append(c.Validation.Errors, err)
-	if c.Validation.HasErrors() {
-		c.Validation.Keep()
-		c.FlashParams()
-	}
-	return c.Redirect(routes.Code.Index())
+	engine.Insert(source)
+	return c.Redirect(routes.Code.Status())
+}
+func (c *Code) Status() revel.Result {
+	var sources []models.Source
+	engine.Asc("created_at").Find(&sources)
+	return c.Render(sources)
 }
