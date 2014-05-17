@@ -11,7 +11,14 @@ const (
 	Accept int = iota
 	CompileError
 	WrongAnswer
+	TimeLimitExceeded
+	MemoryLimitExceeded
 	UnHandled
+)
+const (
+	Go int = iota
+	C
+	CPlusPlus
 )
 
 var StatusMap = map[int]string{
@@ -28,9 +35,17 @@ func UUPath() string {
 type Source struct {
 	Id        int64
 	UserId    int64
+	ProblemId int64
 	CreatedAt time.Time
+	Lang      int64
 	Status    int
-	Path      string
+	Time      time.Duration
+	//kb为单位
+	Memory int64
+	//文件路径
+	Path string
+	//成功测试输入的第n行
+	TestLine int
 }
 
 func (s *Source) GenPath() string {

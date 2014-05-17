@@ -33,6 +33,6 @@ func (c *Code) Submit(code string) revel.Result {
 }
 func (c *Code) Status() revel.Result {
 	var sources []models.Source
-	engine.Asc("created_at").Find(&sources)
+	engine.Desc("created_at").Find(&sources)
 	return c.Render(sources)
 }

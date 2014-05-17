@@ -2,7 +2,6 @@ package check
 
 import (
 	"fmt"
-	"time"
 
 	"OJ/app/models"
 
@@ -15,21 +14,26 @@ var engine *xorm.Engine
 func init() {
 	engine = models.Engine()
 }
+
 func Do() {
-	for {
-		var sources []models.Source
-		engine.Where("status = ?", models.UnHandled).Find(&sources)
-		for _, v := range sources {
-			out, _ := util.Run("go", "run", v.Path)
-			if string(out) != "Hello World\n" {
-				v.Status = models.WrongAnswer
-				engine.Update(v)
-			} else {
-				v.Status = models.Accept
-				engine.Update(v)
-			}
-		}
-		fmt.Println("refresh")
-		time.Sleep(time.Second)
+	var sources []models.Source
+	err := engine.Where("status = ?", models.UnHandled).Find(&sources)
+	fmt.Println(len(sources))
+	if err != nil {
+		fmt.Println(err)
 	}
+	for _, v := range sources {
+		out, err := util.Run("go", "run", v.Path)
+		if err != nil {
+			fmt.Println(err)
+		}
+		if string(out) != "Hello World\n" {
+			v.Status = models.WrongAnswer
+			engine.Id(v.Id).Cols("status").Update(&v)
+		} else {
+			v.Status = models.Accept
+			engine.Id(v.Id).Cols("status").Update(&v)
+		}
+	}
+	fmt.Println("refresh")
 }
