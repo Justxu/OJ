@@ -1,6 +1,6 @@
 #
 #
-# Dockerfile to install golang
+# Dockerfile to run main.go 
 # VERSION 2 - EDITION 1
 
 # Base image used is ubuntu
@@ -11,9 +11,11 @@ FROM gggaaooppeenngg/ubuntu:golang
 
 MAINTAINER ggaaooppeenngg,gaopeg01@gmail.com
 
-#add main.go source file
+#remove main.go if exists
+RUN rm -f /home/main.go
 
-ADD main.go /home/main.go
+#add main.go source file
+ADD SRCFILE /home/main.go
 
 #run main.go
 
