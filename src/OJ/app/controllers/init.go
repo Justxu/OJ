@@ -2,13 +2,13 @@ package controllers
 
 import (
 	"fmt"
-	"time"
+	//	"time"
 
 	"github.com/go-xorm/xorm"
-	"github.com/revel/revel"
-	"github.com/revel/revel/modules/jobs/app/jobs"
+	//	"github.com/revel/revel"
+	//	"github.com/revel/revel/modules/jobs/app/jobs"
 
-	"OJ/app/check"
+	//	"OJ/app/check"
 	"OJ/app/models"
 )
 
@@ -19,7 +19,8 @@ var (
 func init() {
 	fmt.Println("init")
 	engine = models.Engine()
-	revel.OnAppStart(func() {
-		jobs.Every(time.Second, jobs.Func(check.Do))
-	})
+	/*	revel.OnAppStart(func() {
+			jobs.Every(time.Second, jobs.Func(check.Do))
+		})
+	*/
 }

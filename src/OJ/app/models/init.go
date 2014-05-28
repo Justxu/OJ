@@ -35,7 +35,8 @@ func init() {
 	}
 	showSQL, _ := c.Bool("postgres", "show_sql")
 	engine.ShowSQL = showSQL
-	err = engine.Sync(new(Source))
+	err = engine.Sync(new(Source),
+		new(Problem))
 	if err != nil {
 		panic(err)
 	}

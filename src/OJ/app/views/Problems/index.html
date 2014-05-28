@@ -1,0 +1,11 @@
+<html>
+<head>
+ <title>Problems</title>
+</head>
+<body>
+{{range $k,$v:= .problems}}
+<p>{{$v.Description}}</p>
+<a href="/problem/answer/{{$v.Id}}">回答这个问题</a>
+</body>
+{{end}}
+</html>

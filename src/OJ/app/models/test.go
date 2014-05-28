@@ -2,6 +2,7 @@ package models
 
 //测试文件
 type Test struct {
-	input  string
-	output string
+	Id     int64
+	Input  string
+	Output string
 }
