@@ -31,6 +31,7 @@ func (c *Code) Submit(code string) revel.Result {
 	engine.Insert(source)
 	return c.Redirect(routes.Code.Status())
 }
+
 func (c *Code) Status() revel.Result {
 	var sources []models.Source
 	engine.Desc("created_at").Find(&sources)

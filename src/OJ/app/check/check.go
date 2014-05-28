@@ -11,6 +11,10 @@ import (
 
 var engine *xorm.Engine
 
+const (
+	imageName = "ggaaooppeenngg/ubuntu:golang"
+)
+
 func init() {
 	engine = models.Engine()
 }
@@ -23,6 +27,8 @@ func Do() {
 		fmt.Println(err)
 	}
 	for _, v := range sources {
+		//util.Run("docker", "build", "-t", imageName, ".")
+		//util.Run("docker", imageName, "go", "run", "main.go")
 		out, err := util.Run("go", "run", v.Path)
 		if err != nil {
 			fmt.Println(err)
