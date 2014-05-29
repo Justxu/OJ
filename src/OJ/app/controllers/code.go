@@ -15,16 +15,20 @@ type Code struct {
 	*revel.Controller
 }
 
-func (c *Code) Index() revel.Result {
-	return c.Render()
+func (c *Code) Answer(id int64) revel.Result {
+	var problem models.Problem
+	engine.Id(id).Get(&problem)
+	return c.Render(problem)
 }
 
-func (c *Code) Submit(code string) revel.Result {
+func (c *Code) Submit(code string, problemId int64) revel.Result {
 	fmt.Println("submit")
 	source := &models.Source{}
 	path := source.GenPath()
 	source.CreatedAt = time.Now()
 	source.Status = models.UnHandled
+	//
+	source.ProblemId = problemId
 	//我自己
 	source.UserId = 1
 	util.WriteFile(path, []byte(code))

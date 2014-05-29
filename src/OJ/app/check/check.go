@@ -1,7 +1,11 @@
 package check
 
 import (
+	"bytes"
 	"fmt"
+	"io"
+	"os"
+	"os/exec"
 
 	"OJ/app/models"
 
@@ -29,26 +33,65 @@ func genDocFile(path string) error {
 	if err != nil {
 		return err
 	}
+	return nil
 }
 
 //clean the container after running
-func removeContainer() {
-	util.Run("docker", "rm", "check")
+func removeContainer(name string) {
+	util.Run("docker", "rm", name)
 }
 
 //user generated dockfile to build and run the test
-func test(path string) {
-	defer removeContainer()
+func test(path string) []byte {
+	defer removeContainer(path)
 	genDocFile(path)
 	_, err := util.Run("docker", "build", "-t", imageName, ".")
 	if err != nil {
 		fmt.Println(err)
 	}
-	out, err := util.Run("docker", "run", "--name=check", imageName, "go", "run", "/home/main.go")
+	out, err = util.Run("docker", "run", "--name="+path, imageName, "go", "run", "/home/main.go")
 	if err != nil {
 		fmt.Println(err)
 	}
+	return out
 }
+
+//check input and output
+func checkInput(srcFilePath, inputPath, outputPath string) (int, error) {
+	inf, err := os.Open(inputPath)
+	if err != nil {
+		return err
+	}
+	cmd := exec.Command("go", "run", srcFilePath)
+	cmd.Stdin = inf
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err = cmd.Run()
+	if err != nil {
+		return models.UnHandled, err
+	}
+	outf, err := os.Open(outputPath)
+	if err != nil {
+		return models.UnHandled, err
+	}
+	var testOut []byte
+	tmp := make([]byte, 256)
+	for n, err := outf.Read(tmp); err != io.EOF; n, err = outf.Read(tmp) {
+		testOut = append(testOut, tmp[:n])
+	}
+	if out.Bytes() == testOut {
+		return models.Accept, nil
+	} else {
+		return models.WrongAnswer, nil
+	}
+}
+
+//生产者要不断地扫描任务
+//但是在任务处理完成之前，还是保持着未处理状态，会被再次加入任务队列这个时候
+//有一个通道用来取任务
+//每个处理线程都要有个
+//一种方法每次扫描完成后的所有任务完成再通知才让生产者继续扫描
+//所以需要两个通道，一个用于缓冲任务，一个用于告知结束,select或许可以用上来
 
 func Do() {
 	var sources []models.Source
@@ -65,6 +108,7 @@ func Do() {
 		} else {
 			v.Status = models.Accept
 			engine.Id(v.Id).Cols("status").Update(&v)
+			engine.Id(v.ProblemId).Incr("solved = solved + ?", 1)
 		}
 	}
 	fmt.Println("refresh")

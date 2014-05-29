@@ -6,6 +6,7 @@
 		<p>OJ Editor</p>
 		<form method="POST" action="/Code/Submit" >
 			{{if .errors}}<p>{{.errors.outErr}}</p>{{end}}
+			<input name="problemId" type="hidden" value={{.problem.Id}}></input>
 			<textarea name="code">
 			</textarea>
 			<button type="submit">submit</button>
