@@ -1,0 +1,11 @@
+{{set . "title" "Login"}}
+{{template "header.html" .}}
+{{if .error}}
+<p>{{.error}}</p>
+{{end}}
+<form method="POST" action="/Account/PostLogin">
+	<input type="text" name="user.Email" placeholder="Email Address"></input>	
+	<input type="password" name="user.Password" placeholder="Password"></input>
+	<button class="btn" tyep="submit">Sign in</button>
+</form>
+{{template "footer.html" .}}

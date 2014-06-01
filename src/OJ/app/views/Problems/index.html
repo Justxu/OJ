@@ -1,11 +1,7 @@
-<html>
-<head>
- <title>Problems</title>
-</head>
-<body>
+{{set . "title" "Problem"}}
+{{template "header.html" .}}
 {{range $k,$v:= .problems}}
 <p>{{$v.Description}}</p>
-<a href="/problem/answer/{{$v.Id}}">回答这个问题</a>
-</body>
+<a href="/problems/answer/{{$v.Id}}">回答这个问题</a>
 {{end}}
-</html>
+{{template "footer.html" .}}

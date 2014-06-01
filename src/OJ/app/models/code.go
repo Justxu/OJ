@@ -22,8 +22,12 @@ const (
 )
 
 var StatusMap = map[int]string{
-	Accept:       "Accecpt",
-	CompileError: "CompileError",
+	Accept:              "Accecpt",
+	CompileError:        "CompileError",
+	WrongAnswer:         "WrongAnswer",
+	TimeLimitExceeded:   "TimeLimitExceeded",
+	MemoryLimitExceeded: "MemoryLimitExceeded",
+	UnHandled:           "UnHandled",
 }
 
 func UUPath() string {
@@ -40,12 +44,9 @@ type Source struct {
 	Lang      int64
 	Status    int
 	Time      time.Duration
-	//kb为单位
-	Memory int64
-	//文件路径
-	Path string
-	//成功测试输入的第n行
-	TestLine int
+	Memory    int64  //以Kb为单位
+	Path      string //文件路劲
+	TestLine  int    //测试输入的第N行
 }
 
 func (s *Source) GenPath() string {

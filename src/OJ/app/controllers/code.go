@@ -30,7 +30,13 @@ func (c *Code) Submit(code string, problemId int64) revel.Result {
 	//
 	source.ProblemId = problemId
 	//我自己
-	source.UserId = 1
+	has, id := models.GetUserId(c.Session["user"])
+	if has {
+		source.UserId = id
+	} else {
+		c.Flash.Error("error")
+		return c.Redirect(routes.Code.Answer(problemId))
+	}
 	util.WriteFile(path, []byte(code))
 	engine.Insert(source)
 	return c.Redirect(routes.Code.Status())

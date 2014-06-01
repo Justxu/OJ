@@ -1,15 +1,10 @@
-<html>
-	<head>
-		<title>Code</title>
-	</head>
-	<body>
+{{set . "title" "OJ Editor" }}
+{{template "header.html" .}}
 		<p>OJ Editor</p>
 		<form method="POST" action="/Code/Submit" >
-			{{if .errors}}<p>{{.errors.outErr}}</p>{{end}}
 			<input name="problemId" type="hidden" value={{.problem.Id}}></input>
 			<textarea name="code">
 			</textarea>
 			<button type="submit">submit</button>
 		</form>
-	</body>
-</html>
+{{template "footer.html" .}}

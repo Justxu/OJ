@@ -1,14 +1,11 @@
-<html>
-	<head>
-		<title>Problem</title>
-	</head>
-	<body>
-		<p>Pro Edit</p>
+{{set . "title" "Edit"}}
+{{template "header.html" .}}
+	<p>Pro Edit</p>
 	<form method="POST"  action="/Problems/PostNew">
-		<input name="problem.Title" type="text"></input>
-		<textarea name="problem.Description"></textarea>
-		
+		<input name="problem.Title" type="text" placeholder="title"></input>
+		<input name="problem.InputTest" type="file"> </input>
+		<input name="problem.OutputTest" type="file"></input>
+		<textarea name="problem.Description" placeholder="description"></textarea>
 		<button type="submit">submit</button>
 	</form>
-	</body>
-</html>
+{{template "footer.html" .}}

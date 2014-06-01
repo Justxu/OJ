@@ -49,7 +49,7 @@ func test(path string) []byte {
 	if err != nil {
 		fmt.Println(err)
 	}
-	out, err = util.Run("docker", "run", "--name="+path, imageName, "go", "run", "/home/main.go")
+	out, err := util.Run("docker", "run", "--name="+path, imageName, "go", "run", "/home/main.go")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -60,7 +60,7 @@ func test(path string) []byte {
 func checkInput(srcFilePath, inputPath, outputPath string) (int, error) {
 	inf, err := os.Open(inputPath)
 	if err != nil {
-		return err
+		return models.UnHandled, err
 	}
 	cmd := exec.Command("go", "run", srcFilePath)
 	cmd.Stdin = inf
@@ -77,9 +77,9 @@ func checkInput(srcFilePath, inputPath, outputPath string) (int, error) {
 	var testOut []byte
 	tmp := make([]byte, 256)
 	for n, err := outf.Read(tmp); err != io.EOF; n, err = outf.Read(tmp) {
-		testOut = append(testOut, tmp[:n])
+		testOut = append(testOut, tmp[:n]...)
 	}
-	if out.Bytes() == testOut {
+	if bytes.Equal(out.Bytes(), testOut) {
 		return models.Accept, nil
 	} else {
 		return models.WrongAnswer, nil

@@ -1,0 +1,10 @@
+{{set . "title" "regist"}}
+{{template "header.html" .}}
+<form method="POST" action="/Account/PostRegist">
+	<input type="text" name="user.Name" placeholder="Name"></input>
+	<input type="text" name="user.Email" placeholder="Email Address"></input>	
+	<input type="password" name="user.Password" placeholder="Password"></input>
+	<input type="password" name="user.ConfirmPassword" placeholder="Passwrod confirm"></input>
+	<button class="btn" tyep="submit">Sign up</button>
+</form>
+{{template "footer.html" .}}

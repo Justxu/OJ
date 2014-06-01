@@ -1,3 +1,6 @@
+{{set . "title" "Status"}}
+{{template "header.html" .}}
 {{range $s := .sources}}
-<p>user is {{$s.UserId}} status is {{ $s.Status}}</p>
+<p>user is {{$s.UserId}} status is {{ $s.StatusString }}</p>
 {{end}}
+{{template "footer.html" .}}

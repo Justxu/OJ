@@ -5,7 +5,7 @@
 module:testrunner
 #module:jobs
 
-GET     /                                       App.Index
+GET     /                                       Problems.Index
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
@@ -14,7 +14,7 @@ GET     /favicon.ico                            404
 GET     /public/*filepath                       Static.Serve("public")
 
 #POST 	/Problems/PostNew 			Problems.PostNew
-GET	/Code/Answer/:id 			Code.Answer
+GET	/problems/answer/:id 			Code.Answer
 
 # Catch all
 *       /:controller/:action                    :controller.:action

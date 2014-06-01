@@ -5,6 +5,7 @@ import (
 
 	"OJ/app/models"
 	"OJ/app/routes"
+
 	"github.com/revel/revel"
 )
 
@@ -22,8 +23,6 @@ func (p Problems) Index() revel.Result {
 }
 
 func (p *Problems) PostNew(problem models.Problem) revel.Result {
-	fmt.Println("post")
-	fmt.Println(problem)
 	p.Validation.Required(problem.Title)
 	p.Validation.Required(problem.Description)
 	if p.Validation.HasErrors() {
