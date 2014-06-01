@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 
 	"OJ/app/models"
 	"OJ/app/routes"
@@ -22,13 +24,22 @@ func (p Problems) Index() revel.Result {
 	return p.Render(problems)
 }
 
-func (p *Problems) PostNew(problem models.Problem) revel.Result {
+func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest io.Reader) revel.Result {
 	p.Validation.Required(problem.Title)
 	p.Validation.Required(problem.Description)
+	p.Validation.Required(outputTest)
+	p.Validation.Required(inputTest)
+	pathIn := problem.TestPath("outputTest")
+	pathOut := problem.TestPath("inputTest")
+	defer inputTest.Close()
+	defer outputTest.Close()
 	if p.Validation.HasErrors() {
 		return p.Redirect(routes.Problems.Index())
 	}
-	_, err := engine.Insert(&problem)
+
+	_, err := util.CopyFile(pathIn, inputTest)
+	_, err = util.CopyFile(pathOut, outputTest)
+	_, err = engine.Insert(&problem)
 	if err != nil {
 		fmt.Print(err)
 	}
