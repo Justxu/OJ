@@ -1,13 +1,12 @@
 package controllers
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 
 	"OJ/app/models"
 	"OJ/app/routes"
 
+	"github.com/ggaaooppeenngg/util"
 	"github.com/revel/revel"
 )
 
@@ -24,21 +23,28 @@ func (p Problems) Index() revel.Result {
 	return p.Render(problems)
 }
 
-func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest io.Reader) revel.Result {
+func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest []byte) revel.Result {
 	p.Validation.Required(problem.Title)
 	p.Validation.Required(problem.Description)
 	p.Validation.Required(outputTest)
 	p.Validation.Required(inputTest)
-	pathIn := problem.TestPath("outputTest")
-	pathOut := problem.TestPath("inputTest")
-	defer inputTest.Close()
-	defer outputTest.Close()
+	fmt.Printf("out is %s\n", inputTest)
+	path := problem.TestPath()
+	problem.InputTest = path + "/inputTest"
+	problem.OutputTest = path + "/outputTest"
 	if p.Validation.HasErrors() {
+		p.Validation.Keep()
+		p.FlashParams()
 		return p.Redirect(routes.Problems.Index())
 	}
-
-	_, err := util.CopyFile(pathIn, inputTest)
-	_, err = util.CopyFile(pathOut, outputTest)
+	_, err := util.WriteFile(problem.InputTest, inputTest)
+	if err != nil {
+		fmt.Println(err)
+	}
+	_, err = util.WriteFile(problem.OutputTest, outputTest)
+	if err != nil {
+		fmt.Println(err)
+	}
 	_, err = engine.Insert(&problem)
 	if err != nil {
 		fmt.Print(err)

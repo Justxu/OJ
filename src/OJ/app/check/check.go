@@ -57,7 +57,7 @@ func test(path string) []byte {
 }
 
 //check input and output
-func checkInput(srcFilePath, inputPath, outputPath string) (int, error) {
+func CheckInput(srcFilePath, inputPath, outputPath string) (int, error) {
 	inf, err := os.Open(inputPath)
 	if err != nil {
 		return models.UnHandled, err

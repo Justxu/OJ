@@ -1,7 +1,7 @@
 {{set . "title" "Edit"}}
 {{template "header.html" .}}
 	<p>Pro Edit</p>
-	<form method="POST"  action="/Problems/PostNew">
+	<form method="POST"  action="/Problems/PostNew" enctype="multipart/form-data">
 		<input name="problem.Title" type="text" placeholder="title"></input>
 		<input name="inputTest" type="file"> </input>
 		<input name="outputTest" type="file"></input>
