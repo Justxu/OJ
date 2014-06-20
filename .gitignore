@@ -4,6 +4,7 @@ src/OJ/app/routes/routes.go
 src/github.com/*
 src/code.google.com/p/*
 src/OJ/code/
+src/OJ/problem/
 bin/*
 app.conf
 misc.conf

@@ -1,11 +1,59 @@
 {{set . "title" "Login"}}
 {{template "header.html" .}}
-{{if .error}}
-<p>{{.error}}</p>
-{{end}}
-<form method="POST" action="/Account/PostLogin">
-	<input type="text" name="user.Email" placeholder="Email Address"></input>	
-	<input type="password" name="user.Password" placeholder="Password"></input>
-	<button class="btn" tyep="submit">Sign in</button>
-</form>
+<div class="ui page grid">
+	<div class="ui menu">
+		<div class="menu">
+			<a class="item" href="/Problems/Index" >
+				<i class="question green icon"></i> PROBLEMSET
+			</a>
+			<a class="item">
+				<i class="trophy blue icon"></i> RATING
+			</a>
+			<div class="right menu">
+				<div class="item">
+					<div class="ui icon input">
+						<input type="text" placeholder="Search by tag...">
+						<i class="search link icon"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="ui three column grid">
+	<div class="column">
+	</div>
+	<div class="column">
+		<form method="POST" action="/Account/PostLogin">
+			<div class="ui form segment">
+				<div class="field">
+					<label>用户名</label>
+					<div class="ui left labeled icon input">
+						<input type="text" name="user.Email" placeholder="Email Address">
+						<i class="user icon"></i>
+						<div class="ui corner label">
+							<i class="icon asterisk"></i>
+						</div>
+					</div>
+				</div>
+				<div class="field">
+					<label>密码</label>
+					<div class="ui left labeled icon input">
+						<input type="password" name="user.Password" placeholder="Password">
+						<i class="lock icon"></i>
+						<div class="ui corner label">
+							<i class="icon asterisk"></i>
+						</div>
+					</div>
+				</div>
+				<div class="ui error message">
+					<div class="header">发生了错误</div>
+				</div>
+				<button class="ui blue submit button">登录</button>
+			</div>
+		</form>
+	</div>
+	<div class="column">
+	</div>
+</div>
 {{template "footer.html" .}}

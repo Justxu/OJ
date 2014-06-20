@@ -65,3 +65,6 @@ func (p *Problems) Edit(problem models.Problem) revel.Result {
 	engine.Update(problem)
 	return p.Redirect(routes.Problems.Index())
 }
+func (p *Problems) Standings() revel.Result {
+	return p.Redirect(routes.Problems.Index())
+}
