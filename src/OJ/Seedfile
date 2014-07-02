@@ -1,5 +1,3 @@
-#
-#
 # Dockerfile to run main.go 
 # VERSION 2 - EDITION 1
 
@@ -12,10 +10,10 @@ FROM gggaaooppeenngg/ubuntu:golang
 MAINTAINER ggaaooppeenngg,gaopeg01@gmail.com
 
 #remove main.go if exists
-RUN rm -f /home/main.go
+RUN rm -f /home/main
 
 #add main.go source file
-ADD SRCFILE /home/main.go
+ADD SRCFILE /home/main
 
 #run main.go
 

@@ -44,13 +44,17 @@ sudo ./debootstrap raring raring
 sudo tar -C raring -c . | sudo docker import - raring
 
 ```
-安装golang
+安装golang和git
 ```
 sudo docker run raring apt-get install golang
 
 sudo  ps -a //找到刚刚运行的container的id
 
 sudo commit id  ubuntu/golang
+
+sudo docker run ubuntu/golang apt-get install -q git
+
+sudo commit id ubuntu/gitandgolang
 
 ```
 如果遇到DNS问题,需要配置docker的DNS

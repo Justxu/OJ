@@ -22,6 +22,7 @@ github.com/robfig/go-cache =
 github.com/robfig/gomemcache = 
 github.com/robfig/pathtree = 
 github.com/streadway/simpleuuid = 
+github.com/hjr265/ptrace.go/ptrace =
 
 [res]
 include = 

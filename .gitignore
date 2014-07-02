@@ -1,6 +1,7 @@
 test-results/
 src/OJ/app/tmp/main.go
 src/OJ/app/routes/routes.go
+src/OJ/app/check/tmp/
 src/github.com/*
 src/code.google.com/p/*
 src/OJ/code/
