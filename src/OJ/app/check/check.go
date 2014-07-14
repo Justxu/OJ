@@ -9,7 +9,6 @@ import (
 
 	"OJ/app/models"
 
-	"github.com/ggaaooppeenngg/sandbox"
 	"github.com/ggaaooppeenngg/util"
 	"github.com/go-xorm/xorm"
 )
@@ -17,7 +16,7 @@ import (
 var engine *xorm.Engine
 
 const (
-	imageName = "ggaaooppeenngg/ubuntu:golang"
+	imageName = "ubuntu/sandbox:box"
 )
 
 func init() {
@@ -46,11 +45,11 @@ func removeContainer(name string) {
 func test(path string) []byte {
 	defer removeContainer(path)
 	genDocFile(path)
-	_, err := util.Run("docker", "build", "-t", imageName, ".")
+	_, err := util.Run("docker", "build", "-t", path, ".")
 	if err != nil {
 		fmt.Println(err)
 	}
-	out, err := util.Run("docker", "run", "--name="+path, imageName, "go", "run", "/home/main.go")
+	out, err := util.Run("docker", "run", "-i", "--name="+path, imageName, "go", "run", "/home/main.go")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -58,12 +57,12 @@ func test(path string) []byte {
 }
 
 //check input and output
-func CheckInput(srcFilePath, inputPath, outputPath string) (int, error) {
+func CheckInput(language string, filePath, inputPath, outputPath string) (int, error) {
 	inf, err := os.Open(inputPath)
 	if err != nil {
 		return models.UnHandled, err
 	}
-	cmd := exec.Command("go", "run", srcFilePath)
+	cmd := exec.Command("sandbox", "--glang="+language, filePath+"/tmp."+language, filePath+"tmp")
 	cmd.Stdin = inf
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -96,20 +95,26 @@ func CheckInput(srcFilePath, inputPath, outputPath string) (int, error) {
 
 func Do() {
 	var sources []models.Source
+	var problem models.Problem
 	err := engine.Where("status = ?", models.UnHandled).Find(&sources)
 	fmt.Println(len(sources))
 	if err != nil {
 		fmt.Println(err)
 	}
 	for _, v := range sources {
-		out, _ := util.Run("go", "run", v.Path)
-		if string(out) != "Hello World\n" {
-			v.Status = models.WrongAnswer
-			engine.Id(v.Id).Cols("status").Update(&v)
+		engine.Id(v.ProblemId).Cols("input_test", "output_test").Get(&problem)
+		result, err := CheckInput(v.Lang, v.Path, problem.InputTest, problem.OutputTest)
+		if err != nil {
+			panic(err)
 		} else {
-			v.Status = models.Accept
-			engine.Id(v.Id).Cols("status").Update(&v)
-			engine.Id(v.ProblemId).Incr("solved = solved + ?", 1)
+			if result == models.Accept {
+				v.Status = models.WrongAnswer
+				engine.Id(v.Id).Cols("status").Update(&v)
+			} else {
+				v.Status = models.Accept
+				engine.Id(v.Id).Cols("status").Update(&v)
+				engine.Id(v.ProblemId).Incr("solved = solved + ?", 1)
+			}
 		}
 	}
 	fmt.Println("refresh")

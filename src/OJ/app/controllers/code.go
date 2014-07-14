@@ -21,12 +21,13 @@ func (c *Code) Answer(id int64) revel.Result {
 	return c.Render(problem)
 }
 
-func (c *Code) Submit(code string, problemId int64) revel.Result {
+func (c *Code) Submit(code string, problemId int64, language string) revel.Result {
 	fmt.Println("submit")
 	source := &models.Source{}
 	path := source.GenPath()
 	source.CreatedAt = time.Now()
 	source.Status = models.UnHandled
+	source.Lang = language
 	//
 	source.ProblemId = problemId
 	//我自己
@@ -37,7 +38,14 @@ func (c *Code) Submit(code string, problemId int64) revel.Result {
 		c.Flash.Error("error")
 		return c.Redirect(routes.Code.Answer(problemId))
 	}
-	util.WriteFile(path, []byte(code))
+	switch language {
+	case "c":
+		util.WriteFile(path+"/tmp.c", []byte(code))
+	case "cpp":
+		util.WriteFile(path+"/tmp.cpp", []byte(code))
+	case "go":
+		util.WriteFile(path+"/tmp.go", []byte(code))
+	}
 	engine.Insert(source)
 	return c.Redirect(routes.Code.Status())
 }

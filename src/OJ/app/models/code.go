@@ -33,7 +33,7 @@ var StatusMap = map[int]string{
 func UUPath() string {
 	ui := uuid.NewUUID()
 	path := strings.Replace(ui.String(), "-", "", -1)
-	return path + "/main.go"
+	return path
 }
 
 type Source struct {
@@ -41,7 +41,7 @@ type Source struct {
 	UserId    int64
 	ProblemId int64
 	CreatedAt time.Time
-	Lang      int64
+	Lang      string
 	Status    int
 	Time      time.Duration
 	Memory    int64  //以Kb为单位
