@@ -53,8 +53,7 @@ func (user *User) Validate(v *revel.Validation) {
 }
 
 func (user *User) HasName() bool {
-	u := new(User)
-	has, _ := engine.Where("name = ?", user.Name).Get(u)
+	has, _ := engine.Get(user)
 	if has {
 		return true
 	}
@@ -62,8 +61,7 @@ func (user *User) HasName() bool {
 }
 
 func (user *User) HasEmail() bool {
-	u := new(User)
-	has, _ := engine.Where("email = ?", user.Email).Get(u)
+	has, _ := engine.Get(user)
 	if has {
 		return true
 	}

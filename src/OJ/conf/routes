@@ -15,6 +15,7 @@ GET     /public/*filepath                       Static.Serve("public")
 
 #POST 	/Problems/PostNew 			Problems.PostNew
 GET	/problems/answer/:id 			Code.Answer
+GET     /Account/Reset/:code			Account.Reset
 
 # Catch all
 *       /:controller/:action                    :controller.:action

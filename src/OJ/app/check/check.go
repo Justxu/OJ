@@ -16,7 +16,7 @@ import (
 var engine *xorm.Engine
 
 const (
-	imageName = "ubuntu/sandbox:box"
+	imageName = "ubuntu/sandbox"
 )
 
 func init() {
@@ -108,10 +108,10 @@ func Do() {
 			panic(err)
 		} else {
 			if result == models.Accept {
-				v.Status = models.WrongAnswer
+				v.Status = models.Accept
 				engine.Id(v.Id).Cols("status").Update(&v)
 			} else {
-				v.Status = models.Accept
+				v.Status = models.WrongAnswer
 				engine.Id(v.Id).Cols("status").Update(&v)
 				engine.Id(v.ProblemId).Incr("solved = solved + ?", 1)
 			}
