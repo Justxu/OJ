@@ -1,0 +1,27 @@
+{{set . "title" "Forgot"}}
+{{template "header.html" .}}
+{{template "Account/headpart.html" .}}
+<div class="ui three column grid">
+	<div class="column">
+	</div>
+	<div class="column">
+		<form method="POST" action="/Account/SendResetEmail">
+			<div class="ui form segment">
+				<div class="field">
+					<label>注册邮箱</label>
+					<div class="ui left labeled icon input">
+						<input type="text" name="email" placeholder="Email Address">
+						<i class="user icon"></i>
+						<div class="ui corner label">
+							<i class="icon asterisk"></i>
+						</div>
+					</div>
+				</div>
+				<button class="ui blue submit button">重置</button>
+			</div>
+		</form>
+	</div>
+	<div class="column">
+	</div>
+</div>
+{{template "footer.html" .}}

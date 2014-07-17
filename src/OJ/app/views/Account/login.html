@@ -1,25 +1,6 @@
 {{set . "title" "Login"}}
 {{template "header.html" .}}
-<div class="ui page grid">
-	<div class="ui menu">
-		<div class="menu">
-			<a class="item" href="/Problems/Index" >
-				<i class="question green icon"></i> PROBLEMSET
-			</a>
-			<a class="item">
-				<i class="trophy blue icon"></i> RATING
-			</a>
-			<div class="right menu">
-				<div class="item">
-					<div class="ui icon input">
-						<input type="text" placeholder="Search by tag...">
-						<i class="search link icon"></i>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+{{template "Account/headpart.html" .}}
 <div class="ui three column grid">
 	<div class="column">
 	</div>

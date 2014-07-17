@@ -1,32 +1,12 @@
-{{set . "title" "regist"}}
+{{set . "title" "reset"}}
 {{template "header.html" .}}
 {{template "Account/headpart.html" .}}
 <div class="ui three column grid">
 	<div class="column">
 	</div>
 	<div class="column">
-		<form method="POST" action="/Account/PostRegist">
+		<form method="POST" action="/Account/PostReset">
 			<div class="ui form segment">
-				<div class="field">
-					<label>用户名</label>
-					<div class="ui left labeled icon input">
-						<input type="text" name="user.Name" placeholder="User Name">
-						<i class="user icon"></i>
-						<div class="ui corner label">
-							<i class="icon asterisk"></i>
-						</div>
-					</div>
-				</div>
-				<div class="field">
-					<label>邮箱</label>
-					<div class="ui left labeled icon input">
-						<input type="text" name="user.Email" placeholder="Email Address">
-						<i class="mail icon"></i>
-						<div class="ui corner label">
-							<i class="icon asterisk"></i>
-						</div>
-					</div>
-				</div>
 				<div class="field">
 					<label>密码</label>
 					<div class="ui left labeled icon input">
@@ -38,7 +18,7 @@
 					</div>
 				</div>
 				<div class="field">
-					<label>密码</label>
+					<label>确认密码</label>
 					<div class="ui left labeled icon input">
 						<input type="password" name="user.ConfirmPassword" placeholder="Confirm Password">
 						<i class="lock icon"></i>
@@ -47,10 +27,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="ui error message">
-					<div class="header">发生了错误</div>
-				</div>
-				<button class="ui blue submit button">注册</button>
+				<button class="ui blue submit button">重置</button>
 			</div>
 		</form>
 	</div>

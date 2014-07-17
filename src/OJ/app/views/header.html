@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>{{.title}}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" type="text/css" href="/public/css/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/public/css/general.css">
-    <link rel="shortcut icon" type="image/png" href="/public/images/favicon.png">
-    <script src="/public/js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
-    {{range .moreStyles}}
-    <link rel="stylesheet" type="text/css" href="/public/{{.}}">
-    {{end}}
-    {{range .moreScripts}}
-    <script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
-    {{end}}
-  </head>
-  <body>
-  <div class="ui page grid">
-    <div class="ui right floated buttons">
-      <a class="ui small button" href="/Account/Regist">regist</a>
-      <a class="ui small blue button" href="/Account/Login">login</a>
-    </div>
-  </div>
+<head>
+<title>{{.title}}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="/public/css/semantic.min.css">
+<link rel="stylesheet" type="text/css" href="/public/css/general.css">
+<link rel="shortcut icon" type="image/png" href="/public/images/favicon.png">
+<script src="/public/js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+{{range .moreStyles}}
+	<link rel="stylesheet" type="text/css" href="/public/{{.}}">
+{{end}}
+{{range .moreScripts}}
+	<script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
+{{end}}
+</head>
+<body>
+<div class="ui page grid">
+	<div class="ui right floated buttons">
+		{{if .session.username }}
+			<a class="ui small blue button" href="/Account/Logout">logout</a>
+		{{else}}
+			<a class="ui small button" href="/Account/Regist">regist</a>
+			<a class="ui small blue button" href="/Account/Login">login</a>
+		{{end}}
+	</div>
+</div>
