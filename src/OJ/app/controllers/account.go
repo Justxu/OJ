@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"time"
 
 	"OJ/app/models"
 	"OJ/app/routes"
@@ -53,13 +54,55 @@ func (c Account) PostRegist(user models.User) revel.Result {
 		c.FlashParams()
 		return c.Redirect(routes.Account.Regist())
 	}
-
+	code := uuid.NewUUID()
+	user.ActiveCode = code.String()
+	user.ActiveCodeCreatedTime = time.Now()
 	if !user.Save() {
 		c.Flash.Error("Registered user failed")
 		return c.Redirect(routes.Account.Regist())
 	}
 	c.Session["user"] = user.Name
-	return c.Redirect(routes.Account.Regist())
+	subject := "activate password"
+	content := `<h2><a href="http://localhost:9000/Account/Activate/` + user.ActiveCode + `">activate account</a></h2>`
+	//stmp is defined in ./init.go
+	err := SendMail(subject, content, smtpConfig.Username, []string{user.Email}, smtpConfig, true)
+	if err != nil {
+		fmt.Println(err)
+	}
+	c.Flash.Success("please check email to make your account active")
+	return c.Redirect(routes.Account.Notice())
+}
+func (c Account) ResentActiveCode() revel.Result {
+	username := c.Session["user"]
+	user := models.GetCurrentUser(username)
+	subject := "activate password"
+	content := `<h2><a href="http://localhost:9000/Account/Activate/` + user.ActiveCode + `>activate account</a></h2>`
+	//stmp is defined in ./init.go
+	err := SendMail(subject, content, smtpConfig.Username, []string{user.Email}, smtpConfig, true)
+	if err != nil {
+		fmt.Println(err)
+	}
+	c.Flash.Success("please check email to make your account active")
+	return c.Redirect(routes.Account.Notice())
+}
+
+func (c Account) Activate(activecode string) revel.Result {
+	var user = &models.User{}
+	_, err := engine.Where("active_code = ?", activecode).Get(user)
+	if err != nil {
+		fmt.Println(err)
+	}
+	user.ActiveCode = ""
+	user.Active = true
+	_, err = engine.Cols("active", "active_code").Update(user)
+	if err != nil {
+		fmt.Println(err)
+	}
+	c.Flash.Success("激活成功")
+	return c.Redirect(routes.Account.Notice())
+}
+func (c Account) Notice() revel.Result {
+	return c.Render()
 }
 func (c Account) Regist() revel.Result {
 	return c.Render()
@@ -73,43 +116,49 @@ func (c Account) SendResetEmail(email string) revel.Result {
 	var user models.User
 	user.Email = email
 	code := uuid.NewUUID()
-	user.Code = code.String()
-	user.CodeCreated = code.Time()
+	user.ResetCode = code.String()
+	user.ResetCodeCreatedTime = time.Now()
 	if user.HasEmail() {
-		engine.Clos("code").Update(user)
+		engine.Cols("reset_code,reset_code_created_time").Update(user)
 		subject := "Reset Password"
-		content := `<h2><a href="http://localhost:9000/Account/Reset/` + user.Code + `>Reset Password</a></h2>`
-		SendMail(subject, body, "GOOJ", []string{email}, smtp, true)
+		content := `<h2><a href="http://localhost:9000/Account/Reset/` + user.ResetCode + `>Reset Password</a></h2>`
+		//stmp is defined in ./init.go
+		SendMail(subject, content, "GOOJ", []string{email}, smtpConfig, true)
+		return c.Redirect(routes.Account.Forget())
 	} else {
 		c.Flash.Error("Wrong Email")
 		return c.Redirect(routes.Account.Forget())
 	}
 }
-
+func (c Account) Forgot() revel.Result {
+	return c.Render()
+}
 func (c Account) Reset(code string) revel.Result {
-	code := uuid.Parse(code)
+	uucode := uuid.Parse(code)
 	var user models.User
 	engine.Where("code = ?", code).Get(&user)
-	t, _ := code.Time()
-	if user.CodeCreated.Sub(t) > time.Minute {
+	ut, _ := uucode.Time()
+	s, n := ut.UnixTime()
+	t := time.Unix(s, n)
+	if user.ResetCodeCreatedTime.Sub(t) > time.Minute {
 		c.Flash.Error("Reset Reply time out")
-		c.Redirect(routes.Account.Forget())
+		return c.Redirect(routes.Account.Forget())
 	} else {
 		c.Session["username"] = user.Name
 		return c.Render()
 	}
 }
 
-func (c Account) PostReset(user models.User) {
+func (c Account) PostReset(user models.User) revel.Result {
 	username := c.Session["username"]
 	if user.Password == user.ConfirmPassword {
-		u.HashedPassword = models.GenHashPasswordAndSalt(u.Password)
-		u.Code = ""
-		engine.Id(id).Update(&user)
+		user.HashedPassword, user.Salt = models.GenHashPasswordAndSalt(user.Password)
+		user.ResetCode = ""
+		engine.Where("username = ?", username).Update(&user)
 		c.Session["username"] = username
-		c.Redirect(routes.Problems.Index())
+		return c.Redirect(routes.Problems.Index())
 	} else {
 		c.Flash.Error("两次密码输入不一致")
-		c.Redirect(routes.Account.Reset())
+		return c.Redirect(routes.Account.Reset(user.ResetCode))
 	}
 }

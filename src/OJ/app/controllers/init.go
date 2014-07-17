@@ -1,35 +1,41 @@
 package controllers
 
 import (
-	"fmt"
-	//	"time"
+	//"fmt"
+	//"time"
 
 	"github.com/go-xorm/xorm"
-	"github.com/revel/revel/config"
-	//	"github.com/revel/revel/modules/jobs/app/jobs"
+	"github.com/revel/config"
+	//"github.com/revel/revel/modules/jobs/app/jobs"
 
-	//	"OJ/app/check"
+	//"OJ/app/check"
 	"OJ/app/models"
 )
 
 var (
-	engine *xorm.Engine
-	stmp   SmtpConfig
+	engine     *xorm.Engine
+	smtpConfig SmtpConfig
 )
 
+func GetStmp() SmtpConfig {
+	return smtpConfig
+}
+
 func init() {
-	fmt.Println("init")
 	engine = models.Engine()
 	/*	revel.OnAppStart(func() {
 			jobs.Every(time.Second, jobs.Func(check.Do))
 		})
 	*/
-	c, err := config.ReadDefault("src/OJ/conf/misc.conf")
+	c, err := config.ReadDefault("conf/misc.conf")
 	if err != nil {
 		panic(err)
 	}
-	stmp.Username = c.String("smtp", "username")
-	stmp.Password = c.String("smtp", "password")
-	stmp.Host = c.String("smtp", "host")
-	stmp.Addr = c.String("smtp", "address")
+	smtpConfig.Username, err = c.String("smtp", "username")
+	if err != nil {
+		panic(err)
+	}
+	smtpConfig.Password, _ = c.String("smtp", "password")
+	smtpConfig.Host, _ = c.String("smtp", "host")
+	smtpConfig.Addr, _ = c.String("smtp", "address")
 }

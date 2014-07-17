@@ -1,10 +1,11 @@
+{{template "flash.html" .}}
 <div class="ui page grid">
 	<div class="column">
 		<div class="ui header">关于</div>
 	</div>
 </div>
-  {{if eq .RunMode "dev"}}
-    {{template "debug.html" .}}
-  {{end}}
-  </body>
+{{if eq .RunMode "dev"}}
+{{template "debug.html" .}}
+{{end}}
+</body>
 </html>

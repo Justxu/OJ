@@ -33,4 +33,4 @@ localWd = src/OJ
 
 [cmd]
 run =  revel run OJ
-
+test = go test OJ/app/controllers

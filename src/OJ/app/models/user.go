@@ -12,17 +12,26 @@ import (
 )
 
 type User struct {
-	Id              int64  `xorm:"pk"`
-	Name            string `xorm:"varchar(16)"`
-	Email           string `xorm:"varchar(256)"`
-	Password        string `xorm:"-"`
-	ConfirmPassword string `xorm:"-"`
-	HashedPassword  string `xorm:"varchar(64)"` //SHA256 输出32个字节 64长度的字符串
-	Salt            string `xorm:"varchar(64)"`
-	Code            string `xorm:"varchar(32)"`
-	CodeCreatedTime time.Time
-	JoinedAt        time.Time
-	Problems        int64 //Number of solved problems
+	Id                    int64  `xorm:"pk autoincr"`
+	Name                  string `xorm:"varchar(16)"`
+	Email                 string `xorm:"varchar(256)"`
+	Password              string `xorm:"-"`
+	ConfirmPassword       string `xorm:"-"`
+	HashedPassword        string `xorm:"varchar(64)"` //SHA256 输出32个字节 64长度的字符串
+	Salt                  string `xorm:"varchar(64)"`
+	ActiveCode            string `xorm:"varchar(36)"`
+	ActiveCodeCreatedTime time.Time
+	Active                bool
+	ResetCode             string `xorm:"varchar(36)"`
+	ResetCodeCreatedTime  time.Time
+	JoinedAt              time.Time
+	Problems              int64 //Number of solved problems
+}
+
+func GetCurrentUser(name string) *User {
+	user := &User{}
+	engine.Where("username = ?", name).Get(user)
+	return user
 }
 
 func (user *User) Validate(v *revel.Validation) {

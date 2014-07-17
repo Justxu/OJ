@@ -1,18 +1,31 @@
-{{if .flash.success}}
-<div class="alert alert-success">
-	{{.flash.success}}
-</div>
-{{end}}
-
-{{if or .errors .flash.error}}
-<div class="alert alert-error">
-	{{if .flash.error}}
-		{{.flash.error}}
-	{{end}}
-	<ul style="margin-top:10px;">
-		{{range .errors}}
-			<li>{{.}}</li>
+<div class="ui three column grid">
+	<div class="column">
+	</div>
+	<div class="column">
+		{{if .flash.success }}
+		<div class="ui success message">
+			<i class="close icon"></i>
+			<div class="header">
+				{{.flash.success}}
+			</div>
+		</div>      
 		{{end}}
-	</ul>
+		{{if or .errors .flash.error}}
+		<div class="ui error message">
+			<i class="close icon"></i>
+			{{if .flash.error}}
+			<div class="header">
+				{{.Flash.Error}}
+			</div>
+			{{end}}
+			<ul class="list">
+				{{range .errors}}
+				<li>{{.}}</li>
+				{{end}}
+			</ul>
+		</div>      
+		{{end}}
+	</div>
+	<div class="column">
+	</div>
 </div>
-{{end}}
