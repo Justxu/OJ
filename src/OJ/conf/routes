@@ -15,8 +15,12 @@ GET     /public/*filepath                       Static.Serve("public")
 
 #POST 	/Problems/PostNew 			Problems.PostNew
 GET	/problems/answer/:id 			Code.Answer
+# Account management
 GET     /Account/Reset/:resetcode		Account.Reset
 GET     /Account/Activate/:activecode 		Account.Activate
+
+# Problem Index
+GET   	/Problem/P/:index 			Problems.P
 
 # Catch all
 *       /:controller/:action                    :controller.:action

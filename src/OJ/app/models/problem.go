@@ -7,12 +7,14 @@ import (
 )
 
 type Problem struct {
-	Id          int64
-	Title       string
-	Solved      int64
-	Description string `xorm:"TEXT"` //问题描述
-	InputTest   string //输入测试
-	OutputTest  string //输出测试
+	Id             int64
+	Title          string
+	Solved         int64
+	Description    string `xorm:"TEXT"`
+	InputSample    string `xorm:"varchar(256)"`
+	OutputSample   string `xorm:"varchar(256)"`
+	InputTestPath  string //input test path
+	OutputTestPath string //output test path
 }
 
 func (p *Problem) TestPath() string {

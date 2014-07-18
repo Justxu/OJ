@@ -103,7 +103,7 @@ func Do() {
 	}
 	for _, v := range sources {
 		engine.Id(v.ProblemId).Cols("input_test", "output_test").Get(&problem)
-		result, err := CheckInput(v.Lang, v.Path, problem.InputTest, problem.OutputTest)
+		result, err := CheckInput(v.Lang, v.Path, problem.InputTestPath, problem.OutputTestPath)
 		if err != nil {
 			panic(err)
 		} else {

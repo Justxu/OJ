@@ -14,13 +14,23 @@ type Problems struct {
 	*revel.Controller
 }
 
-func (p Problems) Index() revel.Result {
+func (p *Problems) Index() revel.Result {
 	var problems []models.Problem
 	err := engine.Limit(10).Find(&problems)
 	if err != nil {
 		fmt.Println(err)
 	}
 	return p.Render(problems)
+}
+
+//URL: prolem/p/id,get problem information
+func (p *Problems) P(index int) revel.Result {
+	p.Validation.Min(index, 0).Message("worong problem index")
+	err := engine.Id(id).Get(&prob)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return p.Render(prob)
 }
 
 func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest []byte) revel.Result {
@@ -30,18 +40,18 @@ func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest []byte)
 	p.Validation.Required(inputTest)
 	fmt.Printf("out is %s\n", inputTest)
 	path := problem.TestPath()
-	problem.InputTest = path + "/inputTest"
-	problem.OutputTest = path + "/outputTest"
+	problem.InputTestPath = path + "/inputTest"
+	problem.OutputTestPath = path + "/outputTest"
 	if p.Validation.HasErrors() {
 		p.Validation.Keep()
 		p.FlashParams()
 		return p.Redirect(routes.Problems.Index())
 	}
-	_, err := util.WriteFile(problem.InputTest, inputTest)
+	_, err := util.WriteFile(problem.InputTestPath, inputTest)
 	if err != nil {
 		fmt.Println(err)
 	}
-	_, err = util.WriteFile(problem.OutputTest, outputTest)
+	_, err = util.WriteFile(problem.OutputTestPath, outputTest)
 	if err != nil {
 		fmt.Println(err)
 	}
