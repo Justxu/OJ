@@ -1,6 +1,9 @@
 package tests
 
 import (
+	"fmt"
+	"net/http"
+	"net/http/cookiejar"
 	"net/url"
 
 	"OJ/app/models"
@@ -13,16 +16,20 @@ type RegisterTest struct {
 }
 
 func (t *RegisterTest) Before() {
+	cookieJar, _ := cookiejar.New(nil)
+	t.Client = &http.Client{
+		Jar: cookieJar,
+	}
 	println("Set up")
 }
 
-func (t RegisterTest) TestRegiterPageWorks() {
+func (t *RegisterTest) TestRegisterPageWorks() {
 	t.Get("/Account/Login/")
 	t.AssertOk()
 	t.AssertContentType("text/html; charset=utf-8")
 }
 
-func (t RegisterTest) TestRegiterPostWorks() {
+func (t *RegisterTest) TestRegisterPostWorks() {
 	var user models.User
 	defer engine.Delete(&user)
 	form := url.Values{
@@ -36,8 +43,9 @@ func (t RegisterTest) TestRegiterPostWorks() {
 	has, _ := engine.Get(&user)
 	t.Assert(has)
 }
-func (t RegisterTest) TestActiveCode() {
-	var user *models.User
+
+func (t *RegisterTest) TestActiveCode() {
+	var user models.User
 	defer engine.Delete(&user)
 	form := url.Values{
 		"user.Name":            []string{"testName"},
@@ -46,22 +54,22 @@ func (t RegisterTest) TestActiveCode() {
 		"user.ConfirmPassword": []string{"testtest"},
 	}
 	t.PostForm("/Account/PostRegist", form)
-	user = new(models.User)
-	has, err := engine.Where("email =?", "test@test.com").Get(user)
+	has, err := engine.Where("email =?", "test@test.com").Get(&user)
 	t.Assert(err == nil)
 	t.Assert(has)
 	t.Assert(user.ActiveCode != "")
 	t.Get("/Account/Activate/" + user.ActiveCode)
-	t.AssertOk()
-	user = new(models.User)
-	has, err = engine.Where("email =?", "test@test.com").Cols("active").Get(user)
+	fmt.Println(user.Id)
+	user = models.User{}
+	has, err = engine.Where("email =?", "test@test.com").Get(&user)
+	fmt.Println(user)
+	t.AssertEqual(nil, err)
 	t.Assert(has)
-	t.AssertEqual(err, nil)
-	t.AssertEqual(user.Active, true)
+	t.AssertEqual(true, user.Active)
 }
 
-func (t RegisterTest) TestResetCode() {
-	var user *models.User
+func (t *RegisterTest) TestResetCode() {
+	var user models.User
 	defer engine.Delete(&user)
 	form := url.Values{
 		"user.Name":            []string{"testName"},
@@ -70,22 +78,38 @@ func (t RegisterTest) TestResetCode() {
 		"user.ConfirmPassword": []string{"testtest"},
 	}
 	t.PostForm("/Account/PostRegist", form)
-	user = new(models.User)
-	has, err := engine.Where("email =?", "test@test.com").Get(user)
+	has, err := engine.Where("email =?", "test@test.com").Get(&user)
 	t.Assert(err == nil)
 	t.Assert(has)
+	username := t.Session["username"]
+	t.Assert(username == "testName")
+	fmt.Println(user.HashedPassword)
+	fmt.Println(user.Salt)
 	t.Get("/Account/Logout")
-	t.PostForm("/Account/Forgot", form)
-	engine.Id(user.Id).Get(user)
+	username, has = t.Session["username"]
+	t.Assert(!has)
+	form = url.Values{
+		"email": []string{"test@test.com"},
+	}
+	t.PostForm("/Account/SendResetEmail", form)
+	user = models.User{}
+	has, _ = engine.Where("email =?", "test@test.com").Get(&user)
+	t.Assert(has)
+	t.Assert(user.ResetCode != "")
 	t.Get("/Account/Reset/" + user.ResetCode)
+	username = t.Session["username"]
+	t.Assert(username == "testName")
 	form = url.Values{
 		"user.Password":        []string{"123"},
 		"user.ConfirmPassword": []string{"123"},
 	}
 	t.PostForm("/Account/PostReset", form)
-	engine.Id(user.Id).Get(user)
+	user = models.User{}
+	has, _ = engine.Where("email =?", "test@test.com").Get(&user)
+	t.Assert(has)
+	//println(user.Salt)
 	pw := models.HashPassword("123", user.Salt)
-	t.AssertEqual(pw, user.HashedPassword)
+	t.AssertEqual(user.HashedPassword, pw)
 }
 
 func (t *RegisterTest) After() {

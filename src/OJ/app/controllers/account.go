@@ -116,7 +116,7 @@ func (c Account) Forgot() revel.Result {
 
 func (c Account) SendResetEmail(email string) revel.Result {
 	var user models.User
-	fmt.Println(email)
+	//fmt.Println(email)
 	user.Email = email
 	code := uuid.NewUUID()
 	user.ResetCode = code.String()
@@ -135,7 +135,7 @@ func (c Account) SendResetEmail(email string) revel.Result {
 	}
 }
 func (c Account) Reset(resetcode string) revel.Result {
-	fmt.Println(resetcode)
+	//fmt.Println(resetcode)
 	uucode := uuid.Parse(resetcode)
 	var user models.User
 	has, err := engine.Where("reset_code = ?", resetcode).Get(&user)
@@ -161,19 +161,26 @@ func (c Account) Reset(resetcode string) revel.Result {
 
 func (c Account) PostReset(user models.User) revel.Result {
 	username := c.Session["username"]
-	fmt.Println("user", user)
+	//fmt.Println("user", user)
 	if user.Password == user.ConfirmPassword {
+		//fmt.Println("user password ", user.Password)
 		user.HashedPassword, user.Salt = models.GenHashPasswordAndSalt(user.Password)
+		//fmt.Println("user Hashedpassword ", user.HashedPassword)
+		//fmt.Println("user salt ", user.Salt)
+		//pw := models.HashPassword("123", user.Salt)
+		//fmt.Println("pw ", pw)
 		user.ResetCode = ""
-		_, err := engine.Where("name = ?", username).Update(&user)
+		//fmt.Println(username)
+		_, err := engine.Where("name = ?", username).Cols("hashed_password", "salt", "reset_code").Update(&user)
 		if err != nil {
 			fmt.Println(err)
 		}
+		//fmt.Println("reset ok")
 		c.Session["username"] = username
 		return c.Redirect(routes.Problems.Index())
 	} else {
 		resetcode := c.Flash.Data["resetcode"]
-		fmt.Println("post restcode", resetcode)
+		//fmt.Println("post restcode", resetcode)
 		c.Flash.Error("两次密码输入不一致")
 		return c.Redirect(routes.Account.Reset(resetcode))
 	}
