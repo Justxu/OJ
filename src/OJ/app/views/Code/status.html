@@ -1,29 +1,12 @@
 {{set . "title" "Status"}}
 {{template "header.html" .}}
-<div class="ui page grid">
-      <div class="ui menu">
-        <div class="menu">
-          <a class="green item" href="/Problems/Index">
-            <i class="question icon"></i> PROBLEMSET
-          </a>
-          <a class="item">
-            <i class="trophy blue icon"></i> RATING
-          </a>
-          <div class="right menu">
-            <div class="item">
-              <div class="ui icon input">
-                <input type="text" placeholder="Search by tag...">
-                <i class="search link icon"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="ui sub menu">
-          <a class="item" href="/Problems/Index" >SET</a>
-          <a class="active item" href="/Code/Status" >STATUS</a>
-        </div>
-      </div>
+{{template "sub_header.html" .}}
+    <div class="ui sub menu">
+      <a class="item" href="/">SET</a>
+      <a class="active item" href="#">STATUS</a>
     </div>
+</div>
+</div>
     <div class="ui two column page grid">
       <div class="four wide column">
         <div class="ui vertical pointing menu">

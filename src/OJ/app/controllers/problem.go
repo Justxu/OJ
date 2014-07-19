@@ -26,7 +26,8 @@ func (p *Problems) Index() revel.Result {
 //URL: prolem/p/id,get problem information
 func (p *Problems) P(index int) revel.Result {
 	p.Validation.Min(index, 0).Message("worong problem index")
-	err := engine.Id(id).Get(&prob)
+	var prob models.Problem
+	_, err := engine.Id(index).Get(&prob)
 	if err != nil {
 		fmt.Println(err)
 	}

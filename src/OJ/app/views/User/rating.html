@@ -1,0 +1,24 @@
+{{set . "title" "Rating"}}
+{{template "header.html" .}}
+{{template "sub_header.html" .}}
+    <div class="ui sub menu">
+      <a class="active item" >SOLVED</a>
+      <a class="item" >pending</a>
+    </div>
+  </div>
+</div>
+<div class="ui two column page grid">
+	{{template "left_side.html" .}}
+  <div class="twelve wide column">
+    <div class="ui divided list">
+      {{range $k,$v:= .users}}
+      <div class="item">
+        <div class="content">
+          <a class="header" href="#" >{{$v.Name}}</a>
+        </div>
+      </div>
+      {{end}}
+    </div>
+  </div>
+</div>
+{{template "footer.html" .}}

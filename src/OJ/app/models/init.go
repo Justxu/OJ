@@ -15,6 +15,7 @@ var (
 func Engine() *xorm.Engine {
 	return engine
 }
+
 func init() {
 	var err error
 	c, err := config.ReadDefault("conf/misc.conf")

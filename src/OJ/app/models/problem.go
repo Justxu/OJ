@@ -9,7 +9,9 @@ import (
 type Problem struct {
 	Id             int64
 	Title          string
-	Solved         int64
+	Solved         int64 //times of accepted submit
+	TimeLimit      int64
+	MemoryLimit    int64
 	Description    string `xorm:"TEXT"`
 	InputSample    string `xorm:"varchar(256)"`
 	OutputSample   string `xorm:"varchar(256)"`
