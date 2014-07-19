@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-xorm/xorm"
 	"github.com/revel/config"
-	//"github.com/revel/revel/modules/jobs/app/jobs"
+	"github.com/revel/revel"
 
 	//"OJ/app/check"
 	"OJ/app/models"
@@ -38,4 +38,6 @@ func init() {
 	smtpConfig.Password, _ = c.String("smtp", "password")
 	smtpConfig.Host, _ = c.String("smtp", "host")
 	smtpConfig.Addr, _ = c.String("smtp", "address")
+	//check permission
+	revel.InterceptFunc(CheckLogin, revel.BEFORE, &Problems{})
 }
