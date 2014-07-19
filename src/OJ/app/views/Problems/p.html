@@ -1,22 +1,25 @@
 {{set . "title" "Problem"}}
 {{template "header.html" .}}
 {{template "sub_header.html" .}}
+</div>
+</div>
 <div class="ui two column page grid">
 	{{template "left_side.html" .}}
 	<div class="twelve wide column">
-		<div class="ui piled segment">
-			<div class="ui segment center aligned">
-				<h3>{{.prob.Title}}</h3>
-				<p>Time Limit {{.prob.TimeLimit}}</p>
-				<p>Memory Limit {{.prob.TimeLimit}}</p>
-			</div>
-			<div class="ui clearing divider"></div>
-			<p >{{.prob.Description}}</p>
-			<p>Input Sample</p>
-			<p>{{.prob.InputSample}}</p>
-			<p>Output Sample</p>
-			<p>{{.prob.OutputSample}}</p>
-		</div>
+<div class="ui piled segment">
+	<div class="ui segment center aligned">
+		<h3>{{.prob.Title}}</h3>
+		<p>Time Limit {{.prob.TimeLimit}}</p>
+		<p>Memory Limit {{.prob.TimeLimit}}</p>
+	</div>
+	<div class="ui clearing divider"></div>
+	<p >{{.prob.Description}}</p>
+	<p>Input Sample</p>
+	<p>{{.prob.InputSample}}</p>
+	<p>Output Sample</p>
+	<p>{{.prob.OutputSample}}</p>
+</div>
+<a class="ui button" href="/problems/answer/{{.prob.Id}}">submit</a>
 	</div>
 </div>
 {{template "footer.html" .}}

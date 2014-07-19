@@ -6,7 +6,9 @@ src/github.com/*
 src/code.google.com/p/*
 src/OJ/code/
 src/OJ/problem/
+tmp/
 bin/*
 app.conf
 misc.conf
 *.swp
+

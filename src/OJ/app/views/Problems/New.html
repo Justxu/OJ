@@ -1,11 +1,42 @@
 {{set . "title" "Edit"}}
 {{template "header.html" .}}
-	<p>Pro Edit</p>
+<div class="ui form segment">
 	<form method="POST"  action="/Problems/PostNew" enctype="multipart/form-data">
-		<input name="problem.Title" type="text" placeholder="title"></input>
-		<input name="inputTest" type="file"> </input>
-		<input name="outputTest" type="file"></input>
-		<textarea name="problem.Description" placeholder="description"></textarea>
-		<button type="submit">submit</button>
+		<div class="field">
+			<label>Title</label>
+			<input name="problem.Title" placeholder="Title" type="text">
+		</div>
+		<div class="two fields">
+			<div class="field">
+				<label>Time Limit</label>
+				<input name="problem.TimeLimit" placeholder="Time Limit" type="text">
+			</div>
+			<div class="field">
+				<label>Memory Limit</label>
+				<input name="probelm.MemoryLimit" placeholder="Memory Limit" type="text">
+			</div>
+		</div>
+		<div class="field">
+			<label>Description</label>
+			<textarea name="problem.Description"></textarea>
+		</div>
+		<div class="field">
+			<label>Input Sample</label>
+			<textarea name="problem.InputSample"></textarea>
+		</div>
+		<div class="field">
+			<label>Output Sample</label>
+			<textarea name="problem.OutputSample"></textarea>
+		</div>
+		<div class="field">
+			<label>Input File</label>
+			<input name="inputTest" placeholder="input test file" type="file">
+		</div>
+		<div class="field">
+			<label>Output File</label>
+			<input name="outputTest" placeholder="output test file" type="file">
+		</div>
+		<button class="ui blue submit button">Submit</button>
 	</form>
+</div>
 {{template "footer.html" .}}

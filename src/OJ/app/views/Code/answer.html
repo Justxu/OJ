@@ -1,10 +1,43 @@
-{{set . "title" "OJ Editor" }}
+{{set . "title" "Submit" }}
 {{template "header.html" .}}
-		<p>OJ Editor</p>
-		<form method="POST" action="/Code/Submit" >
+
+<div class="ui form segment">
+	<form method="POST" action="/Code/Submit" >
+		<div class="ui center basic aligned segment">
+			<h3>{{.problem.Title}}</h3>
+		</div>
+		<div class="field">
 			<input name="problemId" type="hidden" value={{.problem.Id}}></input>
-			<textarea name="code">
-			</textarea>
-			<button type="submit">submit</button>
-		</form>
+		</div>
+		<div class="field">
+			<label>代码</label>
+			<textarea name="code"></textarea>
+		</div>
+
+		<!--
+		<div class="field">
+			<label>语言</label>
+			<div class="ui selection dropdown">
+				<input type="hidden" name="lang">
+				<div class="default text">...</div>
+				<i class="dropdown icon"></i>
+				<div class="menu">
+					<div class="item" data-value="c">C</div>
+					<div class="item" data-value="cpp">C++</div>
+					<div class="item" data-value="go">Go</div>
+				</div>
+			</div>
+		</div>
+		 -->
+		<div class="field">
+			<label>语言</label>
+			<select name="lang" class="ui button default small">
+				<option value="C">C</option>
+				<option value="CPP">CPP</option>
+				<option value="Go">Go</option>
+			</select>	
+		</div>
+		<button type="submit" class="ui button blue">submit</button>
+	</form>
+</div>
 {{template "footer.html" .}}
