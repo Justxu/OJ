@@ -18,17 +18,24 @@ const (
 const (
 	Go int = iota
 	C
-	CPlusPlus
+	CPP
 )
 
-var StatusMap = map[int]string{
-	Accept:              "Accecpt",
-	CompileError:        "CompileError",
-	WrongAnswer:         "WrongAnswer",
-	TimeLimitExceeded:   "TimeLimitExceeded",
-	MemoryLimitExceeded: "MemoryLimitExceeded",
-	UnHandled:           "UnHandled",
-}
+var (
+	StatusMap = map[int]string{
+		Accept:              "Accecpt",
+		CompileError:        "CompileError",
+		WrongAnswer:         "WrongAnswer",
+		TimeLimitExceeded:   "TimeLimitExceeded",
+		MemoryLimitExceeded: "MemoryLimitExceeded",
+		UnHandled:           "UnHandled",
+	}
+	LangMap = map[int]string{
+		Go:  "go",
+		C:   "c",
+		CPP: "cpp",
+	}
+)
 
 func UUPath() string {
 	ui := uuid.NewUUID()
@@ -41,7 +48,7 @@ type Source struct {
 	UserId    int64
 	ProblemId int64
 	CreatedAt time.Time
-	Lang      string
+	Lang      int
 	Status    int
 	Time      time.Duration
 	Memory    int64  //以Kb为单位
@@ -55,4 +62,7 @@ func (s *Source) GenPath() string {
 }
 func (s *Source) StatusString() string {
 	return StatusMap[s.Status]
+}
+func (s *Source) LangString() string {
+	return LangMap[s.Lang]
 }

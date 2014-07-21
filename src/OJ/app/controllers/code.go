@@ -21,32 +21,44 @@ func (c *Code) Answer(id int64) revel.Result {
 	return c.Render(problem)
 }
 
-func (c *Code) Submit(code string, problemId int64, language string) revel.Result {
+func (c *Code) Submit(code string, problemId int64, lang string) revel.Result {
 	fmt.Println("submit")
 	source := &models.Source{}
 	path := source.GenPath()
 	source.CreatedAt = time.Now()
 	source.Status = models.UnHandled
-	source.Lang = language
-	//
 	source.ProblemId = problemId
-	//我自己
-	has, id := models.GetUserId(c.Session["user"])
-	if has {
-		source.UserId = id
+	//get user id
+	username := c.Session["username"]
+	u := models.GetCurrentUser(username)
+	if u != nil {
+		source.UserId = u.Id
 	} else {
-		c.Flash.Error("error")
+		c.Flash.Error("wrong user")
 		return c.Redirect(routes.Code.Answer(problemId))
 	}
-	switch language {
+	switch lang {
 	case "c":
-		util.WriteFile(path+"/tmp.c", []byte(code))
+		_, err := util.WriteFile(path+"/tmp.c", []byte(code))
+		if err != nil {
+			fmt.Println(err)
+		}
+		source.Lang = models.C
 	case "cpp":
 		util.WriteFile(path+"/tmp.cpp", []byte(code))
+		source.Lang = models.CPP
 	case "go":
 		util.WriteFile(path+"/tmp.go", []byte(code))
+		source.Lang = models.Go
+	default:
+		c.Flash.Error("wrong lang %s\n", lang)
+		return c.Redirect(routes.Code.Answer(problemId))
 	}
-	engine.Insert(source)
+	_, err := engine.Insert(source)
+	if err != nil {
+		c.Flash.Error(err.Error())
+		return c.Redirect(routes.Code.Answer(problemId))
+	}
 	return c.Redirect(routes.Code.Status())
 }
 

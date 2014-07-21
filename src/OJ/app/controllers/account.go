@@ -73,6 +73,7 @@ func (c Account) PostRegist(user models.User) revel.Result {
 	c.Flash.Success("please check email to make your account active")
 	return c.Redirect(routes.Account.Notice())
 }
+
 func (c Account) ResentActiveCode() revel.Result {
 	username := c.Session["username"]
 	user := models.GetCurrentUser(username)
@@ -117,12 +118,17 @@ func (c Account) Forgot() revel.Result {
 func (c Account) SendResetEmail(email string) revel.Result {
 	var user models.User
 	//fmt.Println(email)
-	user.Email = email
 	code := uuid.NewUUID()
+	user.Email = email
 	user.ResetCode = code.String()
 	user.ResetCodeCreatedTime = time.Now()
+	fmt.Println("email")
 	if user.HasEmail() {
-		engine.Cols("reset_code,reset_code_created_time").Update(user)
+		fmt.Println("update")
+		_, err := engine.Where("email = ?", email).Cols("reset_code", "reset_code_created_time").Update(&user)
+		if err != nil {
+			fmt.Println(err)
+		}
 		subject := "Reset Password"
 		content := `<h2><a href="http://localhost:9000/Account/Reset/` + user.ResetCode + `">Reset Password</a></h2>`
 		//stmp is defined in ./init.go

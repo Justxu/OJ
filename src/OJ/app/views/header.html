@@ -17,6 +17,9 @@
 <body>
 <div class="ui page grid">
 	<div class="ui right floated buttons">
+		{{if eq .RunMode "dev"}}
+			<a class="ui small button" href="/@tests">tests</a>
+		{{end}}
 		{{if .session.username }}
 			<a class="ui small blue button" href="/Account/Logout">logout</a>
 		{{else}}

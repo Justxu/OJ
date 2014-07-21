@@ -82,9 +82,7 @@ func (t *RegisterTest) TestResetCode() {
 	t.Assert(err == nil)
 	t.Assert(has)
 	username := t.Session["username"]
-	t.Assert(username == "testName")
-	fmt.Println(user.HashedPassword)
-	fmt.Println(user.Salt)
+	t.AssertEqual("testName", username)
 	t.Get("/Account/Logout")
 	username, has = t.Session["username"]
 	t.Assert(!has)
@@ -98,7 +96,7 @@ func (t *RegisterTest) TestResetCode() {
 	t.Assert(user.ResetCode != "")
 	t.Get("/Account/Reset/" + user.ResetCode)
 	username = t.Session["username"]
-	t.Assert(username == "testName")
+	t.AssertEqual("testName", username)
 	form = url.Values{
 		"user.Password":        []string{"123"},
 		"user.ConfirmPassword": []string{"123"},

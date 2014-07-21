@@ -1,6 +1,10 @@
 package app
 
-import "github.com/revel/revel"
+import (
+	"fmt"
+
+	"github.com/revel/revel"
+)
 
 func init() {
 	// Filters is the default set of global filters.
@@ -8,6 +12,7 @@ func init() {
 		revel.PanicFilter,             // Recover from panics and display an error page instead.
 		revel.RouterFilter,            // Use the routing table to select the right Action
 		revel.FilterConfiguringFilter, // A hook for adding or removing per-Action filters.
+		UrlPrinter,                    // Print request url
 		revel.ParamsFilter,            // Parse parameters into Controller.Params.
 		revel.SessionFilter,           // Restore and write the session cookie.
 		revel.FlashFilter,             // Restore and write the flash cookie.
@@ -34,5 +39,9 @@ var HeaderFilter = func(c *revel.Controller, fc []revel.Filter) {
 	c.Response.Out.Header().Add("X-XSS-Protection", "1; mode=block")
 	c.Response.Out.Header().Add("X-Content-Type-Options", "nosniff")
 
+	fc[0](c, fc[1:]) // Execute the next filter stage.
+}
+var UrlPrinter = func(c *revel.Controller, fc []revel.Filter) {
+	fmt.Println(c.Request.URL.String())
 	fc[0](c, fc[1:]) // Execute the next filter stage.
 }

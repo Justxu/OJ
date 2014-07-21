@@ -35,7 +35,18 @@ func init() {
 		panic(err)
 	}
 	showSQL, _ := c.Bool("postgres", "show_sql")
+	/*
+		showErr, _ := c.Bool("postgres", "show_err")
+		showDebug, _ := c.Bool("postgres", "show_debug")
+		showWarn, _ := c.Bool("postgres", "show_warn")
+	*/
 	engine.ShowSQL = showSQL
+	fmt.Println("show SQL", showSQL)
+	/*
+		engine.ShowWarn = showWarn
+		engine.ShowErr = showErr
+		engine.ShowDebug = showDebug
+	*/
 	err = engine.Sync(
 		new(Source),
 		new(Problem),

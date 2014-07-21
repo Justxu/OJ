@@ -4,6 +4,9 @@ password=postgres
 dbname=finances
 sslmode=disable
 show_err=true
+show_sql=true
+show_debug=true
+show_warn=true
 
 [smtp]
 smtp.username=someone@example.com

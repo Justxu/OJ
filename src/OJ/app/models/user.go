@@ -43,6 +43,7 @@ func (user *User) Validate(v *revel.Validation) {
 	}
 
 	if user.HasName() {
+		fmt.Println("has name")
 		err := &revel.ValidationError{
 			Message: "该用户名已经被注册",
 			Key:     "user.Name",
@@ -52,6 +53,7 @@ func (user *User) Validate(v *revel.Validation) {
 
 	if valid.Ok {
 		if user.HasEmail() {
+			fmt.Println("has email")
 			err := &revel.ValidationError{
 				Message: "该邮箱已经被用于注册",
 				Key:     "user.Email",
@@ -66,17 +68,19 @@ func (user *User) HasName() bool {
 	has, _ := engine.Where("name =? ", user.Name).Get(u)
 	if has {
 		return true
+	} else {
+		return false
 	}
-	return false
 }
 
 func (user *User) HasEmail() bool {
 	u := new(User)
-	has, _ := engine.Where("email = ?", user.Email).Get(u)
+	has, _ := engine.Where("email =?", user.Email).Cols("name").Get(u)
 	if has {
 		return true
+	} else {
+		return false
 	}
-	return false
 }
 
 //验证登陆

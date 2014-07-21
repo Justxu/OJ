@@ -1,11 +1,9 @@
-package check
+package judge
 
 import (
-	"bytes"
 	"fmt"
-	"io"
-	"os"
 	"os/exec"
+	"strconv"
 
 	"OJ/app/models"
 
@@ -56,34 +54,26 @@ func test(path string) []byte {
 	return out
 }
 
-//check input and output
-func CheckInput(language string, filePath, inputPath, outputPath string) (int, error) {
-	inf, err := os.Open(inputPath)
+//judge input and output
+func Judge(language string, filePath, inputPath, outputPath string, timeLimit, memoryLimit int) (int, error) {
+	cmd := exec.Command("sandbox", "--lang="+language, "--time="+strconv.Itoa(timeLimit), "--memory="+strconv.Itoa(memoryLimit), filePath+"/src/tmp."+language, filePath+"/bin/tmp", inputPath, outputPath)
+	testOut, err := cmd.CombinedOutput()
 	if err != nil {
-		return models.UnHandled, err
+		return models.WrongAnswer, err
 	}
-	cmd := exec.Command("sandbox", "--glang="+language, filePath+"/tmp."+language, filePath+"tmp")
-	cmd.Stdin = inf
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	err = cmd.Run()
-	if err != nil {
-		return models.UnHandled, err
-	}
-	outf, err := os.Open(outputPath)
-	if err != nil {
-		return models.UnHandled, err
-	}
-	var testOut []byte
-	tmp := make([]byte, 256)
-	for n, err := outf.Read(tmp); err != io.EOF; n, err = outf.Read(tmp) {
-		testOut = append(testOut, tmp[:n]...)
-	}
-	if bytes.Equal(out.Bytes(), testOut) {
+	if fmt.Sprintf("%s", testOut) == "AC" {
 		return models.Accept, nil
-	} else {
-		return models.WrongAnswer, nil
 	}
+	if fmt.Sprintf("%s", testOut) == "TLE" {
+		return models.TimeLimitExceeded, nil
+	}
+	if fmt.Sprintf("%s", testOut) == "MLE" {
+		return models.MemoryLimitExceeded, nil
+	}
+	if fmt.Sprintf("%s", testOut) == "CE" {
+		return models.CompileError, nil
+	}
+	return models.WrongAnswer, nil
 }
 
 //生产者要不断地扫描任务
@@ -103,7 +93,7 @@ func Do() {
 	}
 	for _, v := range sources {
 		engine.Id(v.ProblemId).Cols("input_test", "output_test").Get(&problem)
-		result, err := CheckInput(v.Lang, v.Path, problem.InputTestPath, problem.OutputTestPath)
+		result, err := Judge(v.LangString(), v.Path, problem.InputTestPath, problem.OutputTestPath, 1000, 10000)
 		if err != nil {
 			panic(err)
 		} else {
