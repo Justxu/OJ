@@ -14,6 +14,7 @@ const (
 	TimeLimitExceeded
 	MemoryLimitExceeded
 	UnHandled
+	Handling
 )
 const (
 	Go int = iota

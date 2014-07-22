@@ -11,7 +11,11 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
-var engine *xorm.Engine
+var (
+	engine *xorm.Engine
+
+	unHandledCodeChan chan []models.Source
+)
 
 const (
 	imageName = "ubuntu/sandbox"
@@ -19,6 +23,8 @@ const (
 
 func init() {
 	engine = models.Engine()
+	//buffer of size 32
+	unHandledCodeChan = make(chan []models.Source, 32)
 }
 
 //use command sed repleace SRCFILE to real source file
@@ -83,29 +89,46 @@ func Judge(language string, filePath, inputPath, outputPath string, timeLimit, m
 //一种方法每次扫描完成后的所有任务完成再通知才让生产者继续扫描
 //所以需要两个通道，一个用于缓冲任务，一个用于告知结束,select或许可以用上来
 
-func Do() {
+func GetHandledCodeLoop() {
 	var sources []models.Source
-	var problem models.Problem
-	err := engine.Where("status = ?", models.UnHandled).Find(&sources)
-	fmt.Println(len(sources))
-	if err != nil {
-		fmt.Println(err)
-	}
-	for _, v := range sources {
-		engine.Id(v.ProblemId).Cols("input_test", "output_test").Get(&problem)
-		result, err := Judge(v.LangString(), v.Path, problem.InputTestPath, problem.OutputTestPath, 1000, 10000)
+	for {
+		err := engine.Where("status = ?", models.UnHandled).Find(&sources)
+		fmt.Println(len(sources))
 		if err != nil {
-			panic(err)
-		} else {
-			if result == models.Accept {
-				v.Status = models.Accept
-				engine.Id(v.Id).Cols("status").Update(&v)
+			fmt.Println(err)
+		}
+		err = engine.Where("status = ?", models.UnHandled).Cols("status").Update(&models.Source{status: models.Handling})
+		if err != nil {
+			fmt.Println(err)
+		}
+		for k, _ := range sources {
+			sources[k].Stauts = models.Handling
+		}
+		_, err = engine.Update(&sources)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println("refresh")
+		unHandledCodeChan <- sources
+	}
+}
+
+func HandleCodeLoop() {
+	for srouces := range unHandledCodeChan {
+		for _, v := range sources {
+			engine.Id(v.ProblemId).Cols("input_test_path", "output_test_path").Get(&problem)
+			result, err := Judge(v.LangString(), v.Path, problem.InputTestPath, problem.OutputTestPath, problem.TimeLimit, problem.MemoryLimit)
+			if err != nil {
+				panic(err)
 			} else {
-				v.Status = models.WrongAnswer
-				engine.Id(v.Id).Cols("status").Update(&v)
-				engine.Id(v.ProblemId).Incr("solved = solved + ?", 1)
+				v.Status = result
+				if result == models.Accept {
+					engine.Id(v.Id).Cols("status").Update(&v)
+					engine.Id(v.ProblemId).Incr("solved = solved + ?", 1)
+				} else {
+					engine.Id(v.Id).Cols("status").Update(&v)
+				}
 			}
 		}
 	}
-	fmt.Println("refresh")
 }
