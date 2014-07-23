@@ -61,8 +61,8 @@ func test(path string) []byte {
 }
 
 //judge input and output
-func Judge(language string, filePath, inputPath, outputPath string, timeLimit, memoryLimit int) (int, error) {
-	cmd := exec.Command("sandbox", "--lang="+language, "--time="+strconv.Itoa(timeLimit), "--memory="+strconv.Itoa(memoryLimit), filePath+"/src/tmp."+language, filePath+"/bin/tmp", inputPath, outputPath)
+func Judge(language string, filePath, inputPath, outputPath string, timeLimit, memoryLimit int64) (int, error) {
+	cmd := exec.Command("sandbox", "--lang="+language, "--time="+strconv.FormatInt(timeLimit, 10), "--memory="+strconv.FormatInt(memoryLimit, 10), filePath+"/src/tmp."+language, filePath+"/bin/tmp", inputPath, outputPath)
 	testOut, err := cmd.CombinedOutput()
 	if err != nil {
 		return models.WrongAnswer, err
@@ -97,12 +97,12 @@ func GetHandledCodeLoop() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		err = engine.Where("status = ?", models.UnHandled).Cols("status").Update(&models.Source{status: models.Handling})
+		_, err = engine.Where("status = ?", models.UnHandled).Cols("status").Update(&models.Source{Status: models.Handling})
 		if err != nil {
 			fmt.Println(err)
 		}
 		for k, _ := range sources {
-			sources[k].Stauts = models.Handling
+			sources[k].Status = models.Handling
 		}
 		_, err = engine.Update(&sources)
 		if err != nil {
@@ -114,8 +114,9 @@ func GetHandledCodeLoop() {
 }
 
 func HandleCodeLoop() {
-	for srouces := range unHandledCodeChan {
+	for sources := range unHandledCodeChan {
 		for _, v := range sources {
+			problem := new(models.Problem)
 			engine.Id(v.ProblemId).Cols("input_test_path", "output_test_path").Get(&problem)
 			result, err := Judge(v.LangString(), v.Path, problem.InputTestPath, problem.OutputTestPath, problem.TimeLimit, problem.MemoryLimit)
 			if err != nil {

@@ -42,6 +42,6 @@ var HeaderFilter = func(c *revel.Controller, fc []revel.Filter) {
 	fc[0](c, fc[1:]) // Execute the next filter stage.
 }
 var UrlPrinter = func(c *revel.Controller, fc []revel.Filter) {
-	fmt.Println(c.Request.URL.String())
+	fmt.Println(c.Request.Method, c.Request.URL.String())
 	fc[0](c, fc[1:]) // Execute the next filter stage.
 }
