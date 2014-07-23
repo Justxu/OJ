@@ -26,11 +26,11 @@
           <tbody>
           	{{range $s := .sources}}
             <tr>
-              <td>123213</td>
+	      <td>{{$s.Id}}</td>
               <td>1993.10.1</td>
               <td>{{$s.UserId}}</td>
               <td>sum</td>
-              <td>GUN C++</td>
+	      <td>{{ $s.StatusString }}</td>
               <td class="positive">{{ $s.StatusString }}</td>
               <td>0 ms</td>
               <td>0 KB</td>

@@ -4,6 +4,7 @@ conf/misc.conf
 app/tmp/main.go
 app/routes/routes.go
 app/check/tmp/
+judge/judge
 tests/test/*/bin/
 code/
 problem/

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 	"strconv"
+	"time"
 
 	"github.com/ggaaooppeenngg/OJ/app/models"
 
@@ -92,19 +93,15 @@ func Judge(language string, filePath, inputPath, outputPath string, timeLimit, m
 func GetHandledCodeLoop() {
 	var sources []models.Source
 	for {
+		time.Sleep(time.Second)
 		err := engine.Where("status = ?", models.UnHandled).Find(&sources)
-		fmt.Println(len(sources))
+		if len(sources) == 0 {
+			continue
+		}
 		if err != nil {
 			fmt.Println(err)
 		}
 		_, err = engine.Where("status = ?", models.UnHandled).Cols("status").Update(&models.Source{Status: models.Handling})
-		if err != nil {
-			fmt.Println(err)
-		}
-		for k, _ := range sources {
-			sources[k].Status = models.Handling
-		}
-		_, err = engine.Update(&sources)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -130,6 +127,7 @@ func HandleCodeLoop() {
 					engine.Id(v.Id).Cols("status").Update(&v)
 				}
 			}
+			fmt.Println("update")
 		}
 	}
 }
