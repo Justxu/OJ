@@ -24,12 +24,13 @@ const (
 
 var (
 	StatusMap = map[int]string{
-		Accept:              "Accecpt",
-		CompileError:        "CompileError",
-		WrongAnswer:         "WrongAnswer",
-		TimeLimitExceeded:   "TimeLimitExceeded",
-		MemoryLimitExceeded: "MemoryLimitExceeded",
+		Accept:              "Accept",
+		CompileError:        "Compile Error",
+		WrongAnswer:         "Wrong Answer",
+		TimeLimitExceeded:   "Time LimitExceeded",
+		MemoryLimitExceeded: "Memory LimitExceeded",
 		UnHandled:           "UnHandled",
+		Handling:            "Handling",
 	}
 	LangMap = map[int]string{
 		Go:  "go",
@@ -57,6 +58,29 @@ type Source struct {
 	TestLine  int    //测试输入的第N行
 }
 
+func (s *Source) TimeUsed() int64 {
+	return s.Time.Nanoseconds() / 1000
+}
+func (s *Source) CreatedTime() string {
+	return s.CreatedAt.Format(time.Kitchen)
+}
+func (s *Source) GetUserName() string {
+	u := new(User)
+	_, err := engine.Where("id = ?", s.UserId).Cols("name").Get(u)
+	if err != nil {
+		return err.Error()
+	}
+	return u.Name
+
+}
+func (s *Source) GetProblemTitle() string {
+	p := new(Problem)
+	_, err := engine.Where("id = ?", s.ProblemId).Cols("title").Get(p)
+	if err != nil {
+		return err.Error()
+	}
+	return p.Title
+}
 func (s *Source) GenPath() string {
 	s.Path = "code/" + UUPath()
 	return s.Path

@@ -59,6 +59,7 @@ func (c *Code) Submit(code string, problemId int64, lang string) revel.Result {
 		c.Flash.Error(err.Error())
 		return c.Redirect(routes.Code.Answer(problemId))
 	}
+	c.Flash.Success(username + " 提交成功")
 	return c.Redirect(routes.Code.Status())
 }
 

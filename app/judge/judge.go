@@ -2,6 +2,7 @@ package judge
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"strconv"
 	"time"
@@ -63,7 +64,8 @@ func test(path string) []byte {
 
 //judge input and output
 func Judge(language string, filePath, inputPath, outputPath string, timeLimit, memoryLimit int64) (int, error) {
-	cmd := exec.Command("sandbox", "--lang="+language, "--time="+strconv.FormatInt(timeLimit, 10), "--memory="+strconv.FormatInt(memoryLimit, 10), filePath+"/src/tmp."+language, filePath+"/bin/tmp", inputPath, outputPath)
+	defer os.Remove(filePath + "/tmp")
+	cmd := exec.Command("sandbox", "--lang="+language, "--time="+strconv.FormatInt(timeLimit, 10), "--memory="+strconv.FormatInt(memoryLimit, 10), filePath+"/tmp."+language, filePath+"/tmp", inputPath, outputPath)
 	testOut, err := cmd.CombinedOutput()
 	if err != nil {
 		return models.WrongAnswer, err
@@ -114,7 +116,10 @@ func HandleCodeLoop() {
 	for sources := range unHandledCodeChan {
 		for _, v := range sources {
 			problem := new(models.Problem)
-			engine.Id(v.ProblemId).Cols("input_test_path", "output_test_path").Get(&problem)
+			_, err := engine.Id(v.ProblemId).Cols("input_test_path", "output_test_path").Get(problem)
+			if err != nil {
+				fmt.Println(err)
+			}
 			result, err := Judge(v.LangString(), v.Path, problem.InputTestPath, problem.OutputTestPath, problem.TimeLimit, problem.MemoryLimit)
 			if err != nil {
 				panic(err)

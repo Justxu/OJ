@@ -30,7 +30,10 @@ type User struct {
 
 func GetCurrentUser(name string) *User {
 	user := &User{}
-	engine.Where("username = ?", name).Get(user)
+	_, err := engine.Where("username = ?", name).Get(user)
+	if err != nil {
+		fmt.Println(err)
+	}
 	return user
 }
 
