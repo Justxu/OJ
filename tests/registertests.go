@@ -6,7 +6,7 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 
-	"OJ/app/models"
+	"github.com/ggaaooppeenngg/OJ/app/models"
 
 	"github.com/revel/revel"
 )

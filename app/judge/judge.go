@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"strconv"
 
-	"OJ/app/models"
+	"github.com/ggaaooppeenngg/OJ/app/models"
 
 	"github.com/ggaaooppeenngg/util"
 	"github.com/go-xorm/xorm"

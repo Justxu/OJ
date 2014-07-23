@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 
-	"OJ/app/models"
+	"github.com/ggaaooppeenngg/OJ/app/models"
 
 	"github.com/revel/revel"
 )

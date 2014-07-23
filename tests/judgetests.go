@@ -1,8 +1,8 @@
 package tests
 
 import (
-	"OJ/app/judge"
-	"OJ/app/models"
+	"github.com/ggaaooppeenngg/OJ/app/judge"
+	"github.com/ggaaooppeenngg/OJ/app/models"
 
 	"github.com/revel/revel"
 )

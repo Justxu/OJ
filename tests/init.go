@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"OJ/app/models"
+	"github.com/ggaaooppeenngg/OJ/app/models"
 
 	"github.com/go-xorm/xorm"
 )

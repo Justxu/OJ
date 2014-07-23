@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"OJ/app/models"
-	"OJ/app/routes"
+	"github.com/ggaaooppeenngg/OJ/app/models"
+	"github.com/ggaaooppeenngg/OJ/app/routes"
 
 	"github.com/revel/revel"
 )

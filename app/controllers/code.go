@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/ggaaooppeenngg/OJ/app/models"
+	"github.com/ggaaooppeenngg/OJ/app/routes"
+
 	"github.com/ggaaooppeenngg/util"
 	"github.com/revel/revel"
-
-	"OJ/app/models"
-	"OJ/app/routes"
 )
 
 type Code struct {

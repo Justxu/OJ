@@ -1,10 +1,10 @@
 package main
 
 import (
-	"OJ/app/judge"
+	"github.com/ggaaooppeenngg/OJ/app/judge"
 )
 
 func main() {
-	go GetHandledCodeLoop()
-	HandleCodeLoop()
+	go judge.GetHandledCodeLoop()
+	judge.HandleCodeLoop()
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/revel/revel"
 
 	//"OJ/app/check"
-	"OJ/app/models"
+	"github.com/ggaaooppeenngg/OJ/app/models"
 )
 
 var (

@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"OJ/app/controllers"
+	"github.com/ggaaooppeenngg/OJ/app/controllers"
 
 	"github.com/revel/revel"
 )

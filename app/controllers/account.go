@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"OJ/app/models"
-	"OJ/app/routes"
+	"github.com/ggaaooppeenngg/OJ/app/models"
+	"github.com/ggaaooppeenngg/OJ/app/routes"
 
 	"code.google.com/p/go-uuid/uuid"
 	"github.com/revel/revel"
