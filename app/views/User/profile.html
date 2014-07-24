@@ -5,19 +5,40 @@
 </div>
 <div class="ui two column page grid">
   <div class="four wide column">
-    <div class="ui vertical pointing menu">
-      <a class="active item">
-        <i class="user icon"></i> PROFILE
-      </a>
-      <a class="item">
-        <i class="flag icon"></i> SOLVED
-      </a>
-    </div>
+<div class="ui vertical pointing menu">
+	<a class="active item">
+		<i class="user icon"></i> PROFILE
+	</a>
+	<a class="item">
+		<i class="flag icon"></i> SOLVED
+	</a>
+</div>
   </div>
   <div class="twelve wide column">
-    <div class="ui divided list">
-	    {{.user}}
-    </div>
+<div class="ui divided list">
+	<div class="ui page grid stackable relaxed feature segment">
+		<div class="row">
+			<div class="ten wide column">
+				<p>User {{.user.Name}}</p>
+				<p>Email  {{.user.Email}}</p>
+				<div class="ui basic  animated button button">
+					<div class="visible content">More</div>
+					<div class="hidden content"><i class="right arrow icon"></i></div>
+				</div>
+				<div class="ui inverted section divider"></div>
+				<div class="ui animated selection list">
+					<div class="item">
+						Solved	
+						<div class="right floated">{{.user.Solved}}</div>
+					</div>
+				</div>
+			</div>
+			<div class="six wide column">
+				<img class="circular ui image" src="/public/images/favicon.png">
+			</div>
+		</div>
+	</div>
+</div>
   </div>
 </div>
 {{template "footer.html" .}}

@@ -12,11 +12,16 @@
   <div class="twelve wide column">
     <div class="ui divided list">
       {{range $k,$v:= .users}}
-      <div class="item">
-        <div class="content">
-          <a class="header" href="#" >{{$v.Name}}</a>
-        </div>
+     <div class="item">
+      <a class="left floated">#1</a>
+      <div class="right floated ui label">
+	      <i class="checkmark icon"></i>
+	      <a class="detail" href="#">{{$v.Solved}}</a>
       </div>
+      <div class="content">
+	<a class="header" href="/User/Profie/{{$v.Id}}" >{{$v.Name}}</a>
+      </div>
+    </div>
       {{end}}
     </div>
   </div>
