@@ -21,10 +21,7 @@
 			<div class="ten wide column">
 				<p>User {{.user.Name}}</p>
 				<p>Email  {{.user.Email}}</p>
-				<div class="ui basic  animated button button">
-					<div class="visible content">More</div>
-					<div class="hidden content"><i class="right arrow icon"></i></div>
-				</div>
+				<a class="ui primary button" href="/Account/Edit">Edit</a>
 				<div class="ui inverted section divider"></div>
 				<div class="ui animated selection list">
 					<div class="item">
@@ -34,7 +31,11 @@
 				</div>
 			</div>
 			<div class="six wide column">
+				{{if .user.GravatarUrl }}
+				<img class="circular ui image" src="{{.user.GravatarUrl}}">
+				{{else}}
 				<img class="circular ui image" src="/public/images/favicon.png">
+				{{end}}
 			</div>
 		</div>
 	</div>

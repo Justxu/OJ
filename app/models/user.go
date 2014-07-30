@@ -25,8 +25,9 @@ type User struct {
 	ResetCode             string `xorm:"varchar(36)"`
 	ResetCodeCreatedTime  time.Time
 	JoinedAt              time.Time
-	Problems              int64 //Number of problems
-	Solved                int64 //solved problems
+	Problems              int64  //Number of problems
+	Solved                int64  //solved problems
+	GravatarUrl           string `xorm:"varchar(256)"` //Gravatar image
 }
 
 func GetCurrentUser(name string) *User {

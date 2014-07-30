@@ -8,6 +8,7 @@ import (
 	"github.com/ggaaooppeenngg/OJ/app/routes"
 
 	"code.google.com/p/go-uuid/uuid"
+	"github.com/ftrvxmtrx/gravatar"
 	"github.com/revel/revel"
 )
 
@@ -55,6 +56,9 @@ func (c Account) PostRegist(user models.User) revel.Result {
 		c.FlashParams()
 		return c.Redirect(routes.Account.Regist())
 	}
+	hashedEmail := gravatar.EmailHash(user.Email)
+	url := gravatar.GetAvatarURL("https", hashedEmail, gravatar.DefaultMonster, 256)
+	user.GravatarUrl = url.String()
 	code := uuid.NewUUID()
 	user.ActiveCode = code.String()
 	user.ActiveCodeCreatedTime = time.Now()
