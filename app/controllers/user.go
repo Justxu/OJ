@@ -27,3 +27,19 @@ func (u *User) Profile() revel.Result {
 	engine.Where("name = ?", username).Get(&user)
 	return u.Render(user)
 }
+func (u *User) Solved() revel.Result {
+	username := u.Session["username"]
+	user := models.GetCurrentUser(username)
+	if user != nil {
+		usps, err := models.FindSovledProblems(user.Id)
+		if err != nil {
+			u.Flash.Error(err.Error())
+			return u.Render()
+		} else {
+			return u.Render(usps)
+		}
+	} else {
+		return u.Render()
+	}
+
+}

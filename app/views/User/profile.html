@@ -1,19 +1,10 @@
-{{set . "title" "Rating"}}
+{{set . "title" "Profile"}}
 {{template "header.html" .}}
 {{template "sub_header.html" .}}
 </div>
 </div>
 <div class="ui two column page grid">
-  <div class="four wide column">
-<div class="ui vertical pointing menu">
-	<a class="active item">
-		<i class="user icon"></i> PROFILE
-	</a>
-	<a class="item">
-		<i class="flag icon"></i> SOLVED
-	</a>
-</div>
-  </div>
+	{{template "left_side.html" .}}
   <div class="twelve wide column">
 <div class="ui divided list">
 	<div class="ui page grid stackable relaxed feature segment">

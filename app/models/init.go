@@ -50,7 +50,9 @@ func init() {
 	err = engine.Sync(
 		new(Source),
 		new(Problem),
-		new(User))
+		new(User),
+		new(UserProb),
+	)
 	if err != nil {
 		panic(err)
 	}

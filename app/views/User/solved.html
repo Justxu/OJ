@@ -3,15 +3,16 @@
 {{template "sub_header.html" .}}
     <div class="ui sub menu">
       <a class="active item" >SOLVED</a>
-      <a class="item" >PENDING</a>
+      <a class="item" >pending</a>
     </div>
   </div>
 </div>
 <div class="ui two column page grid">
-	{{template "left_side.html" .}}
+{{template "left_side.html" .}}
+{{.usps}}
   <div class="twelve wide column">
     <div class="ui divided list">
-      {{range $k,$v:= .users}}
+      {{range $k,$v:= .usps}}
      <div class="item">
       <a class="left floated">#1</a>
       <div class="right floated ui label">
@@ -19,7 +20,7 @@
 	      <a class="detail" href="#">{{$v.Solved}}</a>
       </div>
       <div class="content">
-	<a class="header" href="/User/Profie/{{$v.Id}}" >{{$v.Name}}</a>
+	<a class="header" href="/Problem/P/{{$v.ProbId}}" >{{$v.ProbId}}</a>
       </div>
     </div>
       {{end}}
