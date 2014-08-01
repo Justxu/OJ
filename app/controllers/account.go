@@ -195,3 +195,41 @@ func (c Account) PostReset(user models.User) revel.Result {
 		return c.Redirect(routes.Account.Reset(resetcode))
 	}
 }
+
+func (c Account) Edit() revel.Result {
+	return c.Render()
+}
+
+func (c Account) Modify(user models.User) revel.Result {
+	if user.HasName() {
+		return c.Redirect(routes.User.Profile())
+	}
+	if user.Password != "" {
+		if user.Password == user.ConfirmPassword {
+			user.HashedPassword, user.Salt = models.GenHashPasswordAndSalt(user.Password)
+			username := c.Session["username"]
+			u := models.GetCurrentUser(username)
+			_, err := engine.Id(u.Id).Update(user)
+			if err != nil {
+				fmt.Println(err)
+			}
+			return c.Redirect(routes.User.Profile())
+		} else {
+			c.Flash.Error("passwords not match")
+			return c.Redirect(routes.Account.Notice())
+		}
+	} else {
+		username := c.Session["username"]
+		u := models.GetCurrentUser(username)
+		_, err := engine.Id(u.Id).Cols("name").Update(user)
+		if err != nil {
+			fmt.Println(err)
+			c.Flash.Error(err.Error())
+		} else {
+			c.Session["username"] = user.Name
+			c.Flash.Success("modify sucess")
+		}
+		return c.Redirect(routes.User.Profile())
+	}
+
+}

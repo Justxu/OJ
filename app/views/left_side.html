@@ -1,4 +1,5 @@
 <div class="four wide column">
+	{{if .session.username}}
 	<div class="ui vertical menu">
 		<a class=" item" href="/User/Profile/">
 			<i class="user icon"></i> PROFILE
@@ -7,4 +8,5 @@
 			<i class="flag icon"></i> SOLVED
 		</a>
 	</div>
+	{{end}}
 </div>
