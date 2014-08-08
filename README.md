@@ -1,5 +1,7 @@
 #GO OnlineJudge
 
+###DEMO
+![demo](pic/demo.png)
 ###GET DEPENDENCIES
 ```
 ./get.sh
