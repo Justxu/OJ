@@ -26,7 +26,7 @@ const (
 func init() {
 	engine = models.Engine()
 	//buffer of size 32
-	unHandledCodeChan = make(chan []models.Source, 32)
+	unHandledCodeChan = make(chan []models.Source)
 }
 
 //use command sed repleace SRCFILE to real source file
@@ -93,9 +93,10 @@ func Judge(language string, filePath, inputPath, outputPath string, timeLimit, m
 //所以需要两个通道，一个用于缓冲任务，一个用于告知结束,select或许可以用上来
 
 func GetHandledCodeLoop() {
-	var sources []models.Source
 	for {
-		time.Sleep(time.Second)
+		fmt.Println("refresh")
+		time.Sleep(2 * time.Second)
+		sources := make([]models.Source, 0)
 		err := engine.Where("status = ?", models.UnHandled).Find(&sources)
 		if len(sources) == 0 {
 			continue
@@ -107,13 +108,17 @@ func GetHandledCodeLoop() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println("refresh")
-		unHandledCodeChan <- sources
+		if len(sources) > 0 {
+			fmt.Println("produce")
+			fmt.Println(sources[0].StatusString())
+			unHandledCodeChan <- sources
+		}
 	}
 }
 
 func HandleCodeLoop() {
 	for sources := range unHandledCodeChan {
+		fmt.Println("update")
 		for _, v := range sources {
 			problem := new(models.Problem)
 			_, err := engine.Id(v.ProblemId).Cols("input_test_path", "output_test_path").Get(problem)
@@ -126,13 +131,24 @@ func HandleCodeLoop() {
 			} else {
 				v.Status = result
 				if result == models.Accept {
-					engine.Id(v.Id).Cols("status").Update(&v)
-					engine.Id(v.ProblemId).Incr("solved = solved + ?", 1)
+					n, err := engine.Id(v.Id).Cols("status").Update(&v)
+					if err != nil {
+						fmt.Println(n)
+						panic(err)
+					}
+					err = engine.Id(v.ProblemId).Incr("solved = solved + 1", 1).Commit()
+					if err != nil {
+						panic(err)
+					}
 				} else {
-					engine.Id(v.Id).Cols("status").Update(&v)
+					fmt.Println("result is", result)
+					n, err := engine.Id(v.Id).Cols("status").Update(&v)
+					if err != nil {
+						fmt.Println(n)
+						panic(err)
+					}
 				}
 			}
-			fmt.Println("update")
 		}
 	}
 }

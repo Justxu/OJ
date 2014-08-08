@@ -27,8 +27,8 @@ var (
 		Accept:              "Accept",
 		CompileError:        "Compile Error",
 		WrongAnswer:         "Wrong Answer",
-		TimeLimitExceeded:   "Time LimitExceeded",
-		MemoryLimitExceeded: "Memory LimitExceeded",
+		TimeLimitExceeded:   "Time Limit Exceeded",
+		MemoryLimitExceeded: "Memory Limit Exceeded",
 		UnHandled:           "UnHandled",
 		Handling:            "Handling",
 	}
