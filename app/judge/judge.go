@@ -66,7 +66,9 @@ func test(path string) []byte {
 func Judge(language string, filePath, inputPath, outputPath string, timeLimit, memoryLimit int64) (int, error) {
 	defer os.Remove(filePath + "/tmp")
 	cmd := exec.Command("sandbox", "--lang="+language, "--time="+strconv.FormatInt(timeLimit, 10), "--memory="+strconv.FormatInt(memoryLimit, 10), filePath+"/tmp."+language, filePath+"/tmp", inputPath, outputPath)
+	fmt.Println(cmd.Args)
 	testOut, err := cmd.CombinedOutput()
+	fmt.Printf("%s\n", testOut)
 	if err != nil {
 		return models.WrongAnswer, err
 	}
@@ -121,7 +123,7 @@ func HandleCodeLoop() {
 		fmt.Println("update")
 		for _, v := range sources {
 			problem := new(models.Problem)
-			_, err := engine.Id(v.ProblemId).Cols("input_test_path", "output_test_path").Get(problem)
+			_, err := engine.Id(v.ProblemId).Cols("input_test_path", "output_test_path", "time_limit", "memory_limit").Get(problem)
 			if err != nil {
 				fmt.Println(err)
 			}

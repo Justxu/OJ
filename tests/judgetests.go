@@ -12,7 +12,10 @@ type JudegeTest struct {
 }
 
 func (t *JudegeTest) TestCLangAPlusB() {
-	c, e := judge.Judge("c", "tests/test/A1/", "tests/test/A1/src/input", "tests/test/A1/src/output", 1000, 10000)
-	t.Assert(e == nil)
-	t.Assert(c == models.Accept)
+	c, e := judge.Judge("c", "tests/test/A1/src", "tests/test/A1/src/input", "tests/test/A1/src/output", 1000, 10000)
+	t.AssertEqual(nil, e)
+	t.AssertEqual(models.Accept, c)
+	c, e = judge.Judge("go", "tests/test/A1/src", "tests/test/A1/src/input", "tests/test/A1/src/output", 1000, 10000)
+	t.AssertEqual(nil, e)
+	t.AssertEqual(models.Accept, c)
 }
