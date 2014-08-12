@@ -1,6 +1,8 @@
 [postgres]
 user=postgres
 password=postgres
+host=localhost
+port=5432
 dbname=finances
 host=localhost
 port=5432

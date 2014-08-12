@@ -6,6 +6,7 @@ app/routes/routes.go
 app/check/tmp/
 judge/judge
 tests/test/*/bin/
+OJ.log
 code/
 problem/
 log/
