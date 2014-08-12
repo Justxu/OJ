@@ -1,32 +1,38 @@
 {{set . "title" "Edit"}}
 {{template "header.html" .}}
 <div class="ui form segment">
-	<form method="POST"  action="/Problems/PostNew" enctype="multipart/form-data">
+	<form method="POST"  action="/Problems/EditPost" enctype="multipart/form-data">
 		<div class="field">
 			<label>Title</label>
-			<input name="problem.Title" placeholder="Title" type="text">
+			<input name="problem.Title" placeholder="Title" type="text" value="{{.problem.Title}}">
 		</div>
 		<div class="two fields">
 			<div class="field">
 				<label>Time Limit</label>
-				<input name="problem.TimeLimit" placeholder="Time Limit" type="text">
+				<input name="problem.TimeLimit" placeholder="Time Limit" type="text" value="{{.problem.TimeLimit}}">
 			</div>
 			<div class="field">
 				<label>Memory Limit</label>
-				<input name="problem.MemoryLimit" placeholder="Memory Limit" type="text">
+				<input name="problem.MemoryLimit" placeholder="Memory Limit" type="text" value="{{.problem.MemoryLimit}}">
 			</div>
 		</div>
 		<div class="field">
 			<label>Description</label>
-			<textarea name="problem.Description"></textarea>
+			<textarea name="problem.Description">
+				{{.problem.Description}}
+			</textarea>
 		</div>
 		<div class="field">
 			<label>Input Sample</label>
-			<textarea name="problem.InputSample"></textarea>
+			<textarea name="problem.InputSample">
+			{{.problem.InputSample}}
+			</textarea>
 		</div>
 		<div class="field">
 			<label>Output Sample</label>
-			<textarea name="problem.OutputSample"></textarea>
+			<textarea name="problem.OutputSample">
+			{{.problem.OutputSample}}
+			</textarea>
 		</div>
 		<div class="field">
 			<label>Input File</label>

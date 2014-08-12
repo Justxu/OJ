@@ -19,7 +19,8 @@
 	<p>Output Sample</p>
 	<p>{{.prob.OutputSample}}</p>
 </div>
-<a class="ui button" href="/problems/answer/{{.prob.Id}}">submit</a>
+	<a class="ui button" href="/problems/answer/{{.prob.Id}}">submit</a>
+	<a class="ui button" href="/Problems/Edit/{{.prob.Id}}">edit</a>
 	</div>
 </div>
 {{template "footer.html" .}}
