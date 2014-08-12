@@ -13,12 +13,29 @@ import (
 )
 
 var (
+	admin      string
 	engine     *xorm.Engine
 	smtpConfig SmtpConfig
 )
 
 func GetStmp() SmtpConfig {
 	return smtpConfig
+}
+
+func initTemplateFunc() {
+	revel.TemplateFuncs["isAdmin"] = func(a interface{}) bool {
+		if a == nil {
+			return false
+		} else {
+			println(admin)
+			return a.(string) == admin
+		}
+	}
+}
+
+//check permission
+func initIntercepter() {
+	revel.InterceptFunc(CheckLogin, revel.BEFORE, &Problems{})
 }
 
 func init() {
@@ -38,6 +55,11 @@ func init() {
 	smtpConfig.Password, _ = c.String("smtp", "password")
 	smtpConfig.Host, _ = c.String("smtp", "host")
 	smtpConfig.Addr, _ = c.String("smtp", "address")
-	//check permission
-	revel.InterceptFunc(CheckLogin, revel.BEFORE, &Problems{})
+	admin, err = c.String("app", "admin")
+	if err != nil {
+		panic(err)
+	}
+	initIntercepter()
+	initTemplateFunc()
+
 }

@@ -1,0 +1,38 @@
+{{set . "title" "Profile"}}
+{{template "header.html" .}}
+{{template "sub_header.html" .}}
+</div>
+</div>
+<div class="ui two column page grid">
+	{{template "left_side.html" .}}
+  <div class="twelve wide column">
+<div class="ui divided list">
+	<div class="ui page grid stackable relaxed feature segment">
+		<div class="row">
+			<div class="ten wide column">
+				<p>User {{.user.Name}}</p>
+				<p>Email  {{.user.Email}}</p>
+				{{if eq .session.username .user.Name }}
+				<a class="ui primary button" href="/Account/Edit">Edit</a>
+				{{end}}
+				<div class="ui inverted section divider"></div>
+				<div class="ui animated selection list">
+					<div class="item">
+						Solved	
+						<div class="right floated">{{.user.Solved}}</div>
+					</div>
+				</div>
+			</div>
+			<div class="six wide column">
+				{{if .user.GravatarUrl }}
+				<img class="circular ui image" src="{{.user.GravatarUrl}}">
+				{{else}}
+				<img class="circular ui image" src="/public/images/favicon.png">
+				{{end}}
+			</div>
+		</div>
+	</div>
+</div>
+  </div>
+</div>
+{{template "footer.html" .}}

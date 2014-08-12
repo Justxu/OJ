@@ -1,30 +1,38 @@
 {{set . "title" "Rating"}}
 {{template "header.html" .}}
 {{template "sub_header.html" .}}
-    <div class="ui sub menu">
-      <a class="active item" >SOLVED</a>
-      <a class="item" >PENDING</a>
-    </div>
+<div class="ui sub menu">
+	<a class="active item" >SOLVED</a>
+</div>
   </div>
 </div>
 <div class="ui two column page grid">
 {{template "left_side.html" .}}
-{{.usps}}
   <div class="twelve wide column">
-    <div class="ui divided list">
-      {{range $k,$v:= .usps}}
-     <div class="item">
-      <a class="left floated">#1</a>
-      <div class="right floated ui label">
-	      <i class="checkmark icon"></i>
-	      <a class="detail" href="#">{{$v.Solved}}</a>
-      </div>
-      <div class="content">
-	<a class="header" href="/Problem/P/{{$v.ProbId}}" >{{$v.ProbId}}</a>
-      </div>
-    </div>
-      {{end}}
-    </div>
+<div class="ui divided list">
+	{{if .usps}}
+	{{range $k,$v:= .usps}}
+	<div class="item">
+		<div class="right floated ui label">
+			{{if eq $v.Solved true }}
+			<i class="checkmark icon">{{$v.Solved}}</i>
+			{{else}}
+			<i class="remove icon">{{$v.Solved}}</i>
+			{{end}}
+		</div>
+		<div class="content">
+			<a class="header" href="/Problem/P/{{$v.ProbId}}" >{{$v.ProbId}}</a>
+		</div>
+	</div>
+	{{end}}
+	{{else}}
+		<div class="ui segment">	
+			<p class="ui yellow message">
+				Come On!
+			</p>
+		</div>
+	{{end}}
+</div>
   </div>
 </div>
 {{template "footer.html" .}}

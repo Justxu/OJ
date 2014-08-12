@@ -2,6 +2,8 @@
 user=postgres
 password=postgres
 dbname=finances
+host=localhost
+port=5432
 sslmode=disable
 show_err=true
 show_sql=true
@@ -15,4 +17,5 @@ smtp.host=smtp.gmail.com
 smtp.address=smtp.gmail.com:25
 smtp.from=someone@example.com
 
-
+[app]
+admin=admin

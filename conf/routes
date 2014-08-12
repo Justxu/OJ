@@ -19,6 +19,10 @@ GET	/problems/answer/:id 			Code.Answer
 GET     /Account/Reset/:resetcode		Account.Reset
 GET     /Account/Activate/:activecode 		Account.Activate
 
+# User 
+
+GET 	/User/U/:id				User.ProfileVisit
+
 # Problem Index
 GET   	/Problem/P/:index 			Problems.P
 

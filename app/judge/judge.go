@@ -87,13 +87,13 @@ func Judge(language string, filePath, inputPath, outputPath string, timeLimit, m
 	return models.WrongAnswer, nil
 }
 
-//生产者要不断地扫描任务
-//但是在任务处理完成之前，还是保持着未处理状态，会被再次加入任务队列这个时候
-//有一个通道用来取任务
-//每个处理线程都要有个
-//一种方法每次扫描完成后的所有任务完成再通知才让生产者继续扫描
-//所以需要两个通道，一个用于缓冲任务，一个用于告知结束,select或许可以用上来
+/*
+	use producer-consumer pattern to handle codes.
+	pick up "unhandled" codes and immediately update to "handling" status,
+	and send them to "unHandledCodeChan" for consumer to deal with
 
+	//TODO: use consumber goroutine pool to handle codes in order to increase multithreading degreee
+*/
 func GetHandledCodeLoop() {
 	for {
 		fmt.Println("refresh")
@@ -138,12 +138,14 @@ func HandleCodeLoop() {
 						fmt.Println(n)
 						panic(err)
 					}
-					err = engine.Id(v.ProblemId).Incr("solved = solved + 1", 1).Commit()
+					p := new(models.Problem)
+					_, err = engine.Id(v.ProblemId).Incr("solved", 1).Update(p)
 					if err != nil {
-						panic(err)
+						fmt.Println(err)
 					}
+					u := new(models.User)
+					_, err = engine.Id(v.UserId).Incr("solved", 1).Update(u)
 				} else {
-					fmt.Println("result is", result)
 					n, err := engine.Id(v.Id).Cols("status").Update(&v)
 					if err != nil {
 						fmt.Println(n)

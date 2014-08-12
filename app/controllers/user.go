@@ -21,12 +21,19 @@ func (u *User) Rating() revel.Result {
 	return u.Render(users)
 }
 
+func (u *User) ProfileVisit(id int64) revel.Result {
+	var user models.User
+	engine.Id(id).Get(&user)
+	return u.Render(user)
+}
+
 func (u *User) Profile() revel.Result {
 	var user models.User
 	username := u.Session["username"]
 	engine.Where("name = ?", username).Get(&user)
 	return u.Render(user)
 }
+
 func (u *User) Solved() revel.Result {
 	username := u.Session["username"]
 	user := models.GetCurrentUser(username)

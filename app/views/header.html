@@ -17,6 +17,9 @@
 <body>
 <div class="ui page grid">
 	<div class="ui right floated buttons">
+		{{if isAdmin .session.username}}
+			<a class="ui small button" href="/Problems/New">new</a>
+		{{end}}
 		{{if eq .RunMode "dev"}}
 			<a class="ui small button" href="/@tests">tests</a>
 		{{end}}
