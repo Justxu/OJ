@@ -29,7 +29,9 @@ func init() {
 	password, _ := c.String("postgres", "password")
 	dbname, _ := c.String("postgres", "dbname")
 	sslmode, _ := c.String("postgres", "sslmode")
-	dataSource := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=%s", user, password, dbname, sslmode)
+	host, _ := c.String("postgres", "host")
+	port, _ := c.String("postgres", "port")
+	dataSource := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=%s host=%s port=%s", user, password, dbname, sslmode, host, port)
 	engine, err = xorm.NewEngine("postgres", dataSource)
 	if err != nil {
 		panic(err)
