@@ -48,7 +48,7 @@ func CheckLogin(c *revel.Controller) revel.Result {
 	if inStringSlice(c.Action, userPermission) {
 		if ok := connected(c); !ok {
 			c.Flash.Error("请先登陆")
-			return c.Redirect(routes.Problems.Index())
+			return c.Redirect(routes.Problems.Index(0))
 		} else {
 			return nil
 		}

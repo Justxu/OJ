@@ -12,17 +12,36 @@ import (
 	"github.com/revel/revel"
 )
 
+const (
+	perPage = 5
+)
+
 type Problems struct {
 	*revel.Controller
 }
 
-func (p *Problems) Index() revel.Result {
+//URL: prolem/Index/index,get problem information
+func (p *Problems) Index(index int64) revel.Result {
 	var problems []models.Problem
-	err := engine.Limit(10).Find(&problems)
+	pagination := &Pagination{}
+	pagination.isValidPage(p.Validation, models.Problem{}, index)
+	if p.Validation.HasErrors() {
+		p.FlashParams()
+		p.Validation.Keep()
+		return p.Redirect(routes.Crash.Notice())
+	}
+
+	err := engine.Limit(perPage, int(index)).Find(&problems)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return p.Render(problems)
+
+	err = pagination.Page(perPage, p.Request.Request.URL.Path)
+	if err != nil {
+		p.Flash.Error("pagination error")
+		p.Redirect(routes.Crash.Notice())
+	}
+	return p.Render(problems, pagination)
 }
 
 //URL: prolem/p/id,get problem information
@@ -31,14 +50,14 @@ func (p *Problems) P(index int) revel.Result {
 	if p.Validation.HasErrors() {
 		p.FlashParams()
 		p.Validation.Keep()
-		return p.Redirect(routes.Problems.Index())
+		return p.Redirect(routes.Problems.Index(1))
 	}
 	var prob models.Problem
 	has, err := engine.Id(index).Get(&prob)
 	if err != nil || !has {
 		fmt.Println(err)
 		p.Flash.Error("problem id error %d", index)
-		p.Redirect(routes.Problems.Index())
+		p.Redirect(routes.Problems.Index(1))
 	}
 	return p.Render(prob)
 }
@@ -57,7 +76,7 @@ func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest []byte)
 	if p.Validation.HasErrors() {
 		p.Validation.Keep()
 		p.FlashParams()
-		return p.Redirect(routes.Problems.Index())
+		return p.Redirect(routes.Problems.Index(1))
 	}
 	_, err := util.WriteFile(problem.InputTestPath, inputTest)
 	if err != nil {
@@ -71,7 +90,7 @@ func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest []byte)
 	if err != nil {
 		fmt.Print(err)
 	}
-	return p.Redirect(routes.Problems.Index())
+	return p.Redirect(routes.Problems.Index(0))
 }
 
 func (p *Problems) New() revel.Result {
@@ -81,7 +100,7 @@ func (p *Problems) New() revel.Result {
 func (p *Problems) Delete(id int64) revel.Result {
 	problem := &models.Problem{Id: id}
 	engine.Delete(problem)
-	return p.Redirect(routes.Problems.Index())
+	return p.Redirect(routes.Problems.Index(1))
 }
 
 func (p *Problems) Edit(id int64) revel.Result {
@@ -107,7 +126,7 @@ func (p *Problems) EditPost(problem models.Problem, inputTest, outputTest []byte
 	if err != nil {
 		p.Flash.Error("id error")
 		fmt.Println(err)
-		return p.Redirect(routes.Problems.Index())
+		return p.Redirect(routes.Problems.Index(1))
 	}
 	_, err = engine.Id(id).Update(problem)
 	if err != nil {
@@ -117,5 +136,5 @@ func (p *Problems) EditPost(problem models.Problem, inputTest, outputTest []byte
 }
 
 func (p *Problems) Standings() revel.Result {
-	return p.Redirect(routes.Problems.Index())
+	return p.Redirect(routes.Problems.Index(1))
 }

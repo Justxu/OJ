@@ -44,7 +44,7 @@ func (c *Account) Logout() revel.Result {
 	for k := range c.Session {
 		delete(c.Session, k)
 	}
-	return c.Redirect(routes.Problems.Index())
+	return c.Redirect(routes.Problems.Index(1))
 }
 
 func (c Account) PostRegist(user models.User) revel.Result {
@@ -187,7 +187,7 @@ func (c Account) PostReset(user models.User) revel.Result {
 		}
 		//fmt.Println("reset ok")
 		c.Session["username"] = username
-		return c.Redirect(routes.Problems.Index())
+		return c.Redirect(routes.Problems.Index(1))
 	} else {
 		resetcode := c.Flash.Data["resetcode"]
 		//fmt.Println("post restcode", resetcode)
