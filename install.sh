@@ -9,3 +9,4 @@ go get -v -u github.com/ggaaooppeenngg/sandbox
 go get -v -u github.com/lib/pq
 go get -v -u github.com/robfig/cron
 
+go get -v -u code.google.com/p/go-uuid/uuid

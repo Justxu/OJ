@@ -13,11 +13,11 @@ show_debug=true
 show_warn=true
 
 [smtp]
-smtp.username=someone@example.com
-smtp.password=password
-smtp.host=smtp.gmail.com
-smtp.address=smtp.gmail.com:25
-smtp.from=someone@example.com
+username=someone@example.com
+password=password
+host=smtp.gmail.com
+address=smtp.gmail.com:25
+from=someone@example.com
 
 [app]
 admin=admin
