@@ -13,11 +13,11 @@
 		<p>Memory Limit {{.prob.MemoryLimit}}</p>
 	</div>
 	<div class="ui clearing divider"></div>
-	<p >{{.prob.Description}}</p>
+	{{Text .prob.Description}}
 	<p>Input Sample</p>
-	<p>{{.prob.InputSample}}</p>
+	{{Text .prob.InputSample}}
 	<p>Output Sample</p>
-	<p>{{.prob.OutputSample}}</p>
+	{{Text .prob.OutputSample}}
 </div>
 	<a class="ui button" href="/problems/answer/{{.prob.Id}}">submit</a>
 	<a class="ui button" href="/Problems/Edit/{{.prob.Id}}">edit</a>

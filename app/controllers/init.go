@@ -14,6 +14,8 @@ import (
 
 var (
 	admin      string
+	appAddr    string
+	appPort    string
 	engine     *xorm.Engine
 	smtpConfig SmtpConfig
 )
@@ -31,6 +33,7 @@ func initTemplateFunc() {
 			return a.(string) == admin
 		}
 	}
+	revel.TemplateFuncs["Text"] = Text
 }
 
 //check permission
@@ -59,6 +62,12 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	c, err = config.ReadDefault("conf/app.conf")
+	if err != nil {
+		panic(err)
+	}
+	appAddr, err = c.String("app", "addr")
+	appPort, err = c.String("app", "port")
 	initIntercepter()
 	initTemplateFunc()
 

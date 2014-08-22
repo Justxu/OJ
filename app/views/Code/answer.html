@@ -1,43 +1,33 @@
 {{set . "title" "Submit" }}
 {{template "header.html" .}}
-
-<div class="ui form segment">
-	<form method="POST" action="/Code/Submit" >
-		<div class="ui center basic aligned segment">
-			<h3>{{.problem.Title}}</h3>
-		</div>
-		<div class="field">
-			<input name="problemId" type="hidden" value={{.problem.Id}}></input>
-		</div>
-		<div class="field">
-			<label>代码</label>
-			<textarea name="code"></textarea>
-		</div>
-
-		<!--
-		<div class="field">
-			<label>语言</label>
-			<div class="ui selection dropdown">
-				<input type="hidden" name="lang">
-				<div class="default text">...</div>
-				<i class="dropdown icon"></i>
-				<div class="menu">
-					<div class="item" data-value="c">C</div>
-					<div class="item" data-value="cpp">C++</div>
-					<div class="item" data-value="go">Go</div>
-				</div>
-			</div>
-		</div>
-		 -->
-		<div class="field">
-			<label>语言</label>
-			<select name="lang" class="ui button default small">
-				<option value="c">C</option>
-				<option value="cpp">CPP</option>
-				<option value="go">Go</option>
-			</select>	
-		</div>
-		<button type="submit" class="ui button blue">submit</button>
-	</form>
+{{template "sub_header.html" .}}
+</div>
+</div>
+<div class="ui page grid">
+	<div class= "row">
+<div class="ui one column form segment">
+<form method="POST" action="/Code/Submit" >
+	<div class="ui center basic aligned segment">
+		<h3>{{.problem.Title}}</h3>
+	</div>
+	<div class="field">
+		<input name="problemId" type="hidden" value={{.problem.Id}}></input>
+	</div>
+	<div class="field">
+		<label>代码</label>
+		<textarea name="code"></textarea>
+	</div>
+	<div class="field">
+		<label>语言</label>
+		<select name="lang" class="ui button default small">
+			<option value="c">C</option>
+			<option value="cpp">CPP</option>
+			<option value="go">Go</option>
+		</select>	
+	</div>
+	<button type="submit" class="ui button blue">submit</button>
+</form>
+</div>
+</div>
 </div>
 {{template "footer.html" .}}

@@ -50,14 +50,14 @@ func (p *Problems) P(index int) revel.Result {
 	if p.Validation.HasErrors() {
 		p.FlashParams()
 		p.Validation.Keep()
-		return p.Redirect(routes.Problems.Index(1))
+		return p.Redirect(routes.Problems.Index(0))
 	}
 	var prob models.Problem
 	has, err := engine.Id(index).Get(&prob)
 	if err != nil || !has {
 		fmt.Println(err)
 		p.Flash.Error("problem id error %d", index)
-		p.Redirect(routes.Problems.Index(1))
+		p.Redirect(routes.Problems.Index(0))
 	}
 	return p.Render(prob)
 }
@@ -76,7 +76,7 @@ func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest []byte)
 	if p.Validation.HasErrors() {
 		p.Validation.Keep()
 		p.FlashParams()
-		return p.Redirect(routes.Problems.Index(1))
+		return p.Redirect(routes.Problems.Index(0))
 	}
 	_, err := util.WriteFile(problem.InputTestPath, inputTest)
 	if err != nil {
@@ -100,7 +100,7 @@ func (p *Problems) New() revel.Result {
 func (p *Problems) Delete(id int64) revel.Result {
 	problem := &models.Problem{Id: id}
 	engine.Delete(problem)
-	return p.Redirect(routes.Problems.Index(1))
+	return p.Redirect(routes.Problems.Index(0))
 }
 
 func (p *Problems) Edit(id int64) revel.Result {
@@ -126,7 +126,7 @@ func (p *Problems) EditPost(problem models.Problem, inputTest, outputTest []byte
 	if err != nil {
 		p.Flash.Error("id error")
 		fmt.Println(err)
-		return p.Redirect(routes.Problems.Index(1))
+		return p.Redirect(routes.Problems.Index(0))
 	}
 	_, err = engine.Id(id).Update(problem)
 	if err != nil {
@@ -136,5 +136,5 @@ func (p *Problems) EditPost(problem models.Problem, inputTest, outputTest []byte
 }
 
 func (p *Problems) Standings() revel.Result {
-	return p.Redirect(routes.Problems.Index(1))
+	return p.Redirect(routes.Problems.Index(0))
 }

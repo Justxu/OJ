@@ -60,11 +60,26 @@ func (c *Code) Submit(code string, problemId int64, lang string) revel.Result {
 		return c.Redirect(routes.Code.Answer(problemId))
 	}
 	c.Flash.Success(username + " 提交成功")
-	return c.Redirect(routes.Code.Status())
+	return c.Redirect(routes.Code.Status(0))
 }
 
-func (c *Code) Status() revel.Result {
+func (c *Code) Status(index int64) revel.Result {
 	var sources []models.Source
-	engine.Desc("created_at").Find(&sources)
-	return c.Render(sources)
+	pagination := &Pagination{}
+	pagination.isValidPage(c.Validation, models.Source{}, index)
+	if c.Validation.HasErrors() {
+		c.FlashParams()
+		c.Validation.Keep()
+		return c.Redirect(routes.Crash.Notice())
+	}
+	err := engine.Desc("created_at").Limit(perPage, int(index)).Find(&sources)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = pagination.Page(perPage, c.Request.Request.URL.Path)
+	if err != nil {
+		c.Flash.Error("pagination error")
+		c.Redirect(routes.Crash.Notice())
+	}
+	return c.Render(sources, pagination)
 }

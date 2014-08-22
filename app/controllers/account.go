@@ -37,14 +37,14 @@ func (c Account) PostLogin(user models.User) revel.Result {
 	} else {
 		c.Session["username"] = user.Name
 	}
-	return c.Redirect(routes.Code.Status())
+	return c.Redirect(routes.Code.Status(0))
 }
 
 func (c *Account) Logout() revel.Result {
 	for k := range c.Session {
 		delete(c.Session, k)
 	}
-	return c.Redirect(routes.Problems.Index(1))
+	return c.Redirect(routes.Problems.Index(0))
 }
 
 func (c Account) PostRegist(user models.User) revel.Result {
@@ -88,7 +88,7 @@ func (c Account) ResentActiveCode() revel.Result {
 	if err != nil {
 		fmt.Println(err)
 	}
-	c.Flash.Out["info"] = `<a href="/Account/ResentActiveCode">重发邮件</a>`
+	c.Flash.Out["info"] = fmt.Sprintf(`<a href="%s:%s/Account/ResentActiveCode">重发邮件</a>`, appAddr, appPort)
 	c.Flash.Success("please check email to make your account active")
 	return c.Redirect(routes.Account.Notice())
 }
@@ -187,7 +187,7 @@ func (c Account) PostReset(user models.User) revel.Result {
 		}
 		//fmt.Println("reset ok")
 		c.Session["username"] = username
-		return c.Redirect(routes.Problems.Index(1))
+		return c.Redirect(routes.Problems.Index(0))
 	} else {
 		resetcode := c.Flash.Data["resetcode"]
 		//fmt.Println("post restcode", resetcode)
