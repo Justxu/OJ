@@ -9,10 +9,12 @@
 			</a>
 			<div class="right menu">
 				<div class="item">
-					<div class="ui icon input">
-						<input type="text" placeholder="Search by tag...">
-						<i class="search link icon"></i>
-					</div>
+					<form method="GET" action="/Problems/Search">
+						<div class="ui icon input">
+							<input type="text" placeholder="Search by tag..." name="key">
+							<i class="search link icon"></i>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>

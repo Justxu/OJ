@@ -70,10 +70,10 @@ func (p *Pagination) Page(perPage int64, url string) error {
 	p.url = url
 	p.hasPrev = true
 	p.hasNext = true
-	// ceil total number of pages
+	// ceil total number( of pages
 	p.pages = int(math.Ceil(float64(p.sum) / float64(perPage)))
-	if p.current < 1 || p.current > p.pages {
-		return errors.New("out of range")
+	if p.current < 1 || (p.current > p.pages && p.pages != 0) {
+		return errors.New("out of range ")
 	} else {
 		if p.current == 1 {
 			p.hasPrev = false

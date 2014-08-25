@@ -134,6 +134,15 @@ func (p *Problems) EditPost(problem models.Problem, inputTest, outputTest []byte
 	}
 	return p.Redirect(routes.Problems.P(int(id)))
 }
+func (p *Problems) Search(key string) revel.Result {
+	var problems []models.Problem
+	err := engine.Where("title = ? ", key).Find(&problems)
+	if err != nil {
+		p.Flash.Error("error %s", err.Error())
+		p.Redirect(routes.Crash.Notice())
+	}
+	return p.Render(problems)
+}
 
 func (p *Problems) Standings() revel.Result {
 	return p.Redirect(routes.Problems.Index(0))

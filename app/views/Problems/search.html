@@ -1,0 +1,29 @@
+{{set . "title" "Problem"}}
+{{template "header.html" .}}
+{{template "sub_header.html" .}}
+<div class="ui sub menu">
+	<a class="active item" >SET</a>
+	<a class="item" href="/Code/Status" >STATUS</a>
+</div>
+ </div>
+</div>
+<div class="ui two column page grid">
+	{{template "left_side.html" .}}
+  <div class="twelve wide column">
+<div class="ui divided list">
+	{{range $k,$v:= .problems}}
+	<div class="item">
+		<div class="right floated ui label">
+			<i class="checkmark icon"></i>
+			<a class="detail" href="#">{{$v.Solved}}</a>
+		</div>
+		<div class="content">
+			<a class="header" href="/Problem/P/{{$v.Id}}" >{{$v.Title}}</a>
+		</div>
+	</div>
+	{{end}}
+</div>
+{{ .pagination.Html }}
+  </div>
+</div>
+{{template "footer.html" .}}
