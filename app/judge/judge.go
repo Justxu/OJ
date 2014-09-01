@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/ggaaooppeenngg/OJ/app/models"
@@ -22,6 +23,12 @@ var (
 const (
 	imageName = "ubuntu/sandbox"
 )
+
+type result struct {
+	Status int64
+	Time   int64
+	Memory int64
+}
 
 func init() {
 	engine = models.Engine()
@@ -63,28 +70,29 @@ func test(path string) []byte {
 }
 
 //judge input and output
-func Judge(language string, filePath, inputPath, outputPath string, timeLimit, memoryLimit int64) (int, error) {
+func Judge(language string, filePath, inputPath, outputPath string, timeLimit, memoryLimit int64) (*result, error) {
 	defer os.Remove(filePath + "/tmp")
 	cmd := exec.Command("sandbox", "--lang="+language, "--time="+strconv.FormatInt(timeLimit, 10), "--memory="+strconv.FormatInt(memoryLimit, 10), filePath+"/tmp."+language, filePath+"/tmp", inputPath, outputPath)
 	fmt.Println(cmd.Args)
 	testOut, err := cmd.CombinedOutput()
+	getResults(testOut)
 	fmt.Printf("%s\n", testOut)
 	if err != nil {
-		return models.WrongAnswer, err
+		return getResults(testOut), err
 	}
 	if fmt.Sprintf("%s", testOut) == "AC" {
-		return models.Accept, nil
+		return getResults(testOut), nil
 	}
 	if fmt.Sprintf("%s", testOut) == "TLE" {
-		return models.TimeLimitExceeded, nil
+		return getResults(testOut), nil
 	}
 	if fmt.Sprintf("%s", testOut) == "MLE" {
-		return models.MemoryLimitExceeded, nil
+		return getResults(testOut), nil
 	}
 	if fmt.Sprintf("%s", testOut) == "CE" {
-		return models.CompileError, nil
+		return getResults(testOut), nil
 	}
-	return models.WrongAnswer, nil
+	return &result{Status: int64(models.WrongAnswer), Memory: 0, Time: 0}, nil
 }
 
 /*
@@ -118,6 +126,14 @@ func GetHandledCodeLoop() {
 	}
 }
 
+func getResults(out []byte) *result {
+	results := strings.Split(fmt.Sprintf("%s", out), ":")
+	status, _ := strconv.ParseInt(results[0], 0, 64)
+	memory, _ := strconv.ParseInt(results[1], 0, 64)
+	time, _ := strconv.ParseInt(results[2], 0, 64)
+	return &result{Status: status, Time: time, Memory: memory}
+}
+
 func HandleCodeLoop() {
 	for sources := range unHandledCodeChan {
 		fmt.Println("update")
@@ -131,9 +147,11 @@ func HandleCodeLoop() {
 			if err != nil {
 				panic(err)
 			} else {
-				v.Status = result
-				if result == models.Accept {
-					n, err := engine.Id(v.Id).Cols("status").Update(&v)
+				v.Status = int(result.Status)
+				v.Time = time.Duration(result.Time) / time.Millisecond
+				v.Memory = result.Memory
+				if v.Status == models.Accept {
+					n, err := engine.Id(v.Id).Cols("status", "time", "memory").Update(&v)
 					if err != nil {
 						fmt.Println(n)
 						panic(err)
@@ -146,7 +164,7 @@ func HandleCodeLoop() {
 					u := new(models.User)
 					_, err = engine.Id(v.UserId).Incr("solved", 1).Update(u)
 				} else {
-					n, err := engine.Id(v.Id).Cols("status").Update(&v)
+					n, err := engine.Id(v.Id).Cols("status", "time", "memory").Update(&v)
 					if err != nil {
 						fmt.Println(n)
 						panic(err)

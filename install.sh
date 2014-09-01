@@ -6,6 +6,7 @@ go get -v -u github.com/go-xorm/xorm
 go get -v -u github.com/ggaaooppeenngg/util
 go get -v -u github.com/ftrvxmtrx/gravatar
 go get -v -u github.com/ggaaooppeenngg/sandbox
+go get -v -u github.com/codegangsta/cli
 go get -v -u github.com/lib/pq
 go get -v -u github.com/robfig/cron
 
