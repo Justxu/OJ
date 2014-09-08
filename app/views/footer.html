@@ -44,7 +44,7 @@ $(function(){
 			}else{
 				$('.loader').addClass('disable');
 				$('.loader').removeClass('active');
-				$('#check').html("<p>load failed.</p>")
+				$('#check').html("<p>"+data.error+"</p>")
 				console.log(data.error);
 			}
 		});

@@ -93,9 +93,13 @@ func (c *Code) Check(id int64) revel.Result {
 		return c.RenderJson(data)
 	}
 	r, e := s.Check()
-	if e != nil {
+	if e != nil || s.Status == models.Handling {
 		data["status"] = false
-		data["error"] = e.Error()
+		if e != nil {
+			data["error"] = e.Error()
+		} else {
+			data["error"] = "is handling!"
+		}
 		return c.RenderJson(data)
 	} else {
 		data["status"] = true
