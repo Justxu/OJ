@@ -53,7 +53,6 @@ func (p *Pagination) isValidPage(v *revel.Validation, bean interface{}, index ..
 		}
 	}
 	if c*perPage > n+perPage || c < 1 {
-
 		e := &revel.ValidationError{
 			Message: fmt.Sprintf("%d is out of range %d", c, n/perPage),
 			Key:     reflect.TypeOf(bean).Name(),
@@ -61,10 +60,13 @@ func (p *Pagination) isValidPage(v *revel.Validation, bean interface{}, index ..
 		v.Errors = append(v.Errors, e)
 	}
 	p.current = int(c)
+	if n < 0 {
+		n = 0
+	}
 	p.sum = int(n)
 }
 func (p *Pagination) Page(perPage int64, url string) error {
-	if p.sum <= 0 {
+	if p.sum < 0 {
 		return errors.New("sum could not be negative number")
 	}
 	p.url = url
@@ -72,8 +74,11 @@ func (p *Pagination) Page(perPage int64, url string) error {
 	p.hasNext = true
 	// ceil total number( of pages
 	p.pages = int(math.Ceil(float64(p.sum) / float64(perPage)))
+	if p.pages == 0 {
+		p.pages = 1
+	}
 	if p.current < 1 || (p.current > p.pages && p.pages != 0) {
-		return errors.New("out of range ")
+		return errors.New(fmt.Sprintf(" %d is out of range %d", p.current, p.pages))
 	} else {
 		if p.current == 1 {
 			p.hasPrev = false

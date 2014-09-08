@@ -1,6 +1,10 @@
 package models
 
 import (
+	"bytes"
+	"fmt"
+	"io/ioutil"
+	"os"
 	"strings"
 	"time"
 
@@ -20,6 +24,8 @@ const (
 	Go int = iota
 	C
 	CPP
+
+	DELIM = "!-_-\n" //delimiter of tests
 )
 
 var (
@@ -46,16 +52,28 @@ func UUPath() string {
 }
 
 type Source struct {
-	Id        int64
-	UserId    int64
-	ProblemId int64
-	CreatedAt time.Time
-	Lang      int
-	Status    int
-	Time      time.Duration
-	Memory    int64  //以Kb为单位
-	Path      string //文件路劲
-	TestLine  int    //测试输入的第N行
+	Id          int64
+	UserId      int64
+	ProblemId   int64
+	CreatedAt   time.Time
+	Time        time.Duration
+	Status      int
+	Lang        int    //source file language
+	Memory      int64  //Kb
+	Path        string //file path
+	Nth         int    //the number of the test not passed
+	WrongAnswer string //the last wrong answer
+
+}
+
+//check report
+type Report struct {
+	Tests []Test //all tests
+	Nth   int    //nth test is wrong, if Nth is 0 , all passed
+}
+type Test struct {
+	In  string
+	Out string
 }
 
 func (s *Source) TimeUsed() int64 {
@@ -80,6 +98,47 @@ func (s *Source) GetProblemTitle() string {
 		return err.Error()
 	}
 	return p.Title
+}
+func check(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+func (s *Source) Check() (*Report, error) {
+	source := new(Source)
+	_, err := engine.Id(s.Id).Get(source)
+	if err != nil {
+		return nil, err
+	}
+	p := new(Problem)
+	_, err = engine.Id(source.ProblemId).Get(p)
+	if err != nil {
+		return nil, err
+	}
+	in, err := os.Open(p.InputTestPath)
+	check(err)
+	defer in.Close()
+	out, err := os.Open(p.OutputTestPath)
+	check(err)
+	defer out.Close()
+	input, err := ioutil.ReadAll(in)
+	check(err)
+	output, err := ioutil.ReadAll(out)
+	check(err)
+	inputs := bytes.Split(input, []byte(DELIM))
+	outputs := bytes.Split(output, []byte(DELIM))
+	var report Report
+	fmt.Printf("%s\n%s\n\n\n%d\n", input, output, source.Nth)
+	for i := 0; i < len(inputs); i++ {
+		in := fmt.Sprintf("%s", inputs[i])
+		out := fmt.Sprintf("%s", outputs[i])
+		report.Tests = append(report.Tests, Test{in, out})
+	}
+	if source.WrongAnswer != "" {
+		report.Tests[len(report.Tests)-1].Out = source.WrongAnswer
+	}
+	report.Nth = source.Nth
+	return &report, nil
 }
 func (s *Source) GenPath() string {
 	s.Path = "code/" + UUPath()

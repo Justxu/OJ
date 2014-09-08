@@ -8,7 +8,7 @@
 ```
 ###RUN PROJECT
 
-modify **conf/app.conf** and **conf/misc.conf** to apply to your enviroment
+modify **conf/app.conf** and **conf/misc.conf** to adapt to your enviroment
 
 ```
 ./run.sh

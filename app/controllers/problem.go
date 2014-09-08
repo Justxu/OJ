@@ -38,7 +38,7 @@ func (p *Problems) Index(index int64) revel.Result {
 
 	err = pagination.Page(perPage, p.Request.Request.URL.Path)
 	if err != nil {
-		p.Flash.Error("pagination error")
+		p.Flash.Error(err.Error())
 		p.Redirect(routes.Crash.Notice())
 	}
 	return p.Render(problems, pagination)
@@ -69,7 +69,6 @@ func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest []byte)
 	p.Validation.Required(problem.Description)
 	p.Validation.Required(outputTest).Message("output file needed")
 	p.Validation.Required(inputTest).Message("input file needed")
-	fmt.Printf("out is %s\n", inputTest)
 	path := problem.TestPath()
 	problem.InputTestPath = path + "/inputTest"
 	problem.OutputTestPath = path + "/outputTest"

@@ -1,4 +1,3 @@
 go build -o judge/judge github.com/ggaaooppeenngg/OJ/judge
-judge/judge &
-echo "begin judge loop"
+judge/judge & 
 revel run github.com/ggaaooppeenngg/OJ prod

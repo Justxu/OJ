@@ -83,3 +83,23 @@ func (c *Code) Status(index int64) revel.Result {
 	}
 	return c.Render(sources, pagination)
 }
+func (c *Code) Check(id int64) revel.Result {
+	s := models.Source{}
+	has, _ := engine.Id(id).Get(&s)
+	data := make(map[string]interface{})
+	if !has {
+		data["status"] = false
+		data["error"] = "not exist!"
+		return c.RenderJson(data)
+	}
+	r, e := s.Check()
+	if e != nil {
+		data["status"] = false
+		data["error"] = e.Error()
+		return c.RenderJson(data)
+	} else {
+		data["status"] = true
+		data["report"] = r
+		return c.RenderJson(data)
+	}
+}

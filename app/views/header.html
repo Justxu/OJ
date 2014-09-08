@@ -6,10 +6,11 @@
 <link rel="stylesheet" type="text/css" href="/public/css/semantic.min.css">
 <link rel="stylesheet" type="text/css" href="/public/css/general.css">
 <link rel="shortcut icon" type="image/png" href="/public/images/favicon.png">
-<script src="/public/js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
 {{range .moreStyles}}
 	<link rel="stylesheet" type="text/css" href="/public/{{.}}">
 {{end}}
+<script src="/public/js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/public/js/semantic.min.js" type="text/javascript" charset="utf-8"></script>
 {{range .moreScripts}}
 	<script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
 {{end}}

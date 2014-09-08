@@ -3,7 +3,6 @@
 {{template "sub_header.html" .}}
     <div class="ui sub menu">
       <a class="active item" >SOLVED</a>
-      <a class="item" >PENDING</a>
     </div>
   </div>
 </div>
@@ -19,7 +18,7 @@
 	      <a class="detail">{{$v.Solved}}</a>
       </div>
       <div class="content">
-	<a class="header" href="/User/Profie/U/{{$v.Id}}" >{{$v.Name}}</a>
+	<a class="header" href="/User/U/{{$v.Id}}" >{{$v.Name}}</a>
       </div>
     </div>
       {{end}}
