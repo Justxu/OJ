@@ -14,7 +14,7 @@ type User struct {
 
 func (u *User) Rating() revel.Result {
 	var users []models.User
-	err := engine.Limit(10).Find(&users)
+	err := engine.Limit(10).Desc("solved").Find(&users)
 	if err != nil {
 		fmt.Println(err)
 	}

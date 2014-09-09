@@ -19,8 +19,10 @@
 	<p>Output Sample</p>
 	{{Text .prob.OutputSample}}
 </div>
-	<a class="ui button" href="/problems/answer/{{.prob.Id}}">submit</a>
-	<a class="ui button" href="/Problems/Edit/{{.prob.Id}}">edit</a>
+	{{if .session.username }}
+		<a class="ui button" href="/problems/answer/{{.prob.Id}}">submit</a>
+		<a class="ui button" href="/Problems/Edit/{{.prob.Id}}">edit</a>
+	{{else}}
 	</div>
 </div>
 {{template "footer.html" .}}
