@@ -129,12 +129,12 @@ func (s *Source) Check() (*Report, error) {
 	outputs := bytes.Split(output, []byte(DELIM))
 	var report Report
 	fmt.Printf("%s\n%s\n\n\n%d\n", input, output, source.Nth)
-	for i := 0; i < len(inputs); i++ {
+	for i := 0; i < source.Nth; i++ {
 		in := fmt.Sprintf("%s", inputs[i])
 		out := fmt.Sprintf("%s", outputs[i])
 		report.Tests = append(report.Tests, Test{in, out})
 	}
-	if source.WrongAnswer != "" {
+	if source.Nth != 0 {
 		report.Tests[len(report.Tests)-1].Out = source.WrongAnswer
 	}
 	report.Nth = source.Nth

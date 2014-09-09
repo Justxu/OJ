@@ -136,6 +136,9 @@ func getResults(out []byte) *result {
 	statuss := results[0]
 	var status int
 	var wrongAnswer string
+	memory, _ := strconv.ParseInt(results[1], 0, 64)
+	time, _ := strconv.ParseInt(results[2], 0, 64)
+	nth64, _ := strconv.ParseInt(results[3], 0, 64)
 	switch statuss {
 	case "AC":
 		status = models.Accept
@@ -148,10 +151,8 @@ func getResults(out []byte) *result {
 	case "WA":
 		status = models.WrongAnswer
 		wrongAnswer = results[4]
+		nth64 += 1
 	}
-	memory, _ := strconv.ParseInt(results[1], 0, 64)
-	time, _ := strconv.ParseInt(results[2], 0, 64)
-	nth64, _ := strconv.ParseInt(results[3], 0, 64)
 	return &result{Status: status, Time: time, Memory: memory, Nth: int(nth64), WrongAnswer: wrongAnswer}
 }
 
