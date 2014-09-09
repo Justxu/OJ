@@ -22,7 +22,7 @@
 	{{if .session.username }}
 		<a class="ui button" href="/problems/answer/{{.prob.Id}}">submit</a>
 		<a class="ui button" href="/Problems/Edit/{{.prob.Id}}">edit</a>
-	{{else}}
+	{{end}}
 	</div>
 </div>
 {{template "footer.html" .}}
