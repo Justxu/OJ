@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ggaaooppeenngg/OJ/app/models"
+	"github.com/ggaaooppeenngg/OJ/app/routes"
 
 	"github.com/revel/revel"
 )
@@ -12,13 +13,26 @@ type User struct {
 	*revel.Controller
 }
 
-func (u *User) Rating() revel.Result {
+//URL: user/Rating/index
+func (u *User) Rating(index int64) revel.Result {
 	var users []models.User
-	err := engine.Limit(10).Desc("solved").Find(&users)
+	pagination := &Pagination{}
+	pagination.isValidPage(u.Validation, models.Problem{}, index)
+	if u.Validation.HasErrors() {
+		u.FlashParams()
+		u.Validation.Keep()
+		return u.Redirect(routes.Crash.Notice())
+	}
+	err := engine.Limit(perPage*(pagination.current-1), int(index)).Desc("solved").Find(&users)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return u.Render(users)
+	err = pagination.Page(perPage, u.Request.Request.URL.Path)
+	if err != nil {
+		u.Flash.Error(err.Error())
+		u.Redirect(routes.Crash.Notice())
+	}
+	return u.Render(users, pagination)
 }
 
 func (u *User) ProfileVisit(id int64) revel.Result {

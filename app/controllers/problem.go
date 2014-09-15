@@ -31,7 +31,7 @@ func (p *Problems) Index(index int64) revel.Result {
 		return p.Redirect(routes.Crash.Notice())
 	}
 
-	err := engine.Limit(perPage, int(index)).Find(&problems)
+	err := engine.Limit(perPage*(pagination.current-1), int(index)).Find(&problems)
 	if err != nil {
 		fmt.Println(err)
 	}

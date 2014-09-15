@@ -65,6 +65,8 @@ func (p *Pagination) isValidPage(v *revel.Validation, bean interface{}, index ..
 	}
 	p.sum = int(n)
 }
+
+//Page must come with is ValidPage
 func (p *Pagination) Page(perPage int64, url string) error {
 	if p.sum < 0 {
 		return errors.New("sum could not be negative number")
