@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strings"
+
 	"github.com/ggaaooppeenngg/OJ/app/models"
 	"github.com/ggaaooppeenngg/OJ/app/routes"
 
@@ -8,7 +10,8 @@ import (
 )
 
 var (
-	userPermission = []string{"Problems.New"}
+	userPermission = []string{"/problems/new"}
+	logoutCheck    = []string{"/account/login"}
 )
 
 func inStringSlice(s string, slc []string) bool {
@@ -44,10 +47,17 @@ func (c App) Index() revel.Result {
 }
 
 func CheckLogin(c *revel.Controller) revel.Result {
-	println(c.Action)
-	if inStringSlice(c.Action, userPermission) {
+	if inStringSlice(strings.ToLower(c.Request.URL.Path), userPermission) {
 		if ok := connected(c); !ok {
 			c.Flash.Error("请先登陆")
+			return c.Redirect(routes.Account.Login())
+		} else {
+			return nil
+		}
+	}
+	if inStringSlice(strings.ToLower(c.Request.URL.Path), logoutCheck) {
+		if ok := connected(c); ok {
+			c.Flash.Error("不可以重复登录")
 			return c.Redirect(routes.Problems.Index(0))
 		} else {
 			return nil

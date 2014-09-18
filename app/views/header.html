@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" type="text/css" href="/public/css/semantic.min.css">
 <link rel="stylesheet" type="text/css" href="/public/css/general.css">
-<link rel="shortcut icon" type="image/png" href="/public/images/favicon.png">
+<link rel="shortcut icon" type="image/jpg" href="/public/images/favicon.jpg">
 {{range .moreStyles}}
 	<link rel="stylesheet" type="text/css" href="/public/{{.}}">
 {{end}}
@@ -17,6 +17,7 @@
 </head>
 <body>
 <div class="ui page grid">
+	<img class="left floated image logo " src="/public/images/logo.jpg"/>
 	<div class="ui right floated buttons">
 		{{if isAdmin .session.username}}
 			<a class="ui small button" href="/Problems/New">new</a>

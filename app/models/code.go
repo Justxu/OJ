@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 	"strings"
 	"time"
 
@@ -104,6 +105,20 @@ func check(err error) {
 		panic(err)
 	}
 }
+func (s *Source) View() (string, error) {
+	source := new(Source)
+	_, err := engine.Id(s.Id).Get(source)
+	if err != nil {
+		return "", err
+	}
+	in, err := os.Open(path.Join(s.Path, "tmp."+LangMap[s.Lang]))
+	check(err)
+	defer in.Close()
+	code, err := ioutil.ReadAll(in)
+	check(err)
+	return fmt.Sprintf("%s", code), nil
+}
+
 func (s *Source) Check() (*Report, error) {
 	source := new(Source)
 	_, err := engine.Id(s.Id).Get(source)

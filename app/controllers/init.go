@@ -36,9 +36,8 @@ func initTemplateFunc() {
 	revel.TemplateFuncs["Text"] = Text
 }
 
-//check permission
 func initIntercepter() {
-	revel.InterceptFunc(CheckLogin, revel.BEFORE, &Problems{})
+	revel.InterceptMethod(CheckLogin, revel.BEFORE)
 }
 
 func init() {

@@ -77,12 +77,15 @@ func test(path string) []byte {
  Every single test is seperated with a new line "!-_-"
  like a+b :
  input:		output:
+ 2
  1 2		3
  3 4		7
  !-_-		!-_-
+ 2
  2 1		3
  4 3		7
  !-_-		!-_-
+ 2
  3 4		7
  1 2		3
 */
@@ -119,6 +122,7 @@ func GetHandledCodeLoop() {
 		if err != nil {
 			fmt.Println(err)
 		}
+		//TODO:if panics rollback the status
 		_, err = engine.Where("status = ?", models.UnHandled).Cols("status").Update(&models.Source{Status: models.Handling})
 		if err != nil {
 			fmt.Println(err)

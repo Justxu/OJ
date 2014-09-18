@@ -53,7 +53,7 @@ func init() {
 		new(Source),
 		new(Problem),
 		new(User),
-		new(UserProb),
+		new(Solve),
 	)
 	if err != nil {
 		panic(err)

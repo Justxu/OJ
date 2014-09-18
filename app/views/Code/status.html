@@ -48,22 +48,22 @@
 		<td>{{ $s.CreatedTime }}</td>
 		<td><a href="/User/U/{{$s.UserId}}">{{ $s.GetUserName }}</a></td>
 		<td>{{ $s.GetProblemTitle }}</td>
-		<td>{{ $s.LangString }}</td>
+		<td class="view" ><a>{{ $s.LangString }}</a></td>
 		{{ with $status := $s.StatusString}}
 		{{if eq $status  "Accept"}}
 		<td class="positive">
-			{{else}}
-			{{if eq $status "Handling"}}
-			<td class="warning">
-				{{else}}
-				<td class="error">
-					{{end}}
-					{{end}}
-					{{ $status }}</td>
-				{{end}}
-				<td>{{ $s.Memory }} KB</td>
-				<td>{{ $s.Time }} MS</td>
-			</tr>
+		{{else}}
+		{{if eq $status "Handling"}}
+		<td class="warning">
+		{{else}}
+		<td class="error">
+		{{end}}
+		{{end}}
+		{{ $status }}</td>
+		{{end}}
+		<td>{{ $s.Memory }} KB</td>
+		<td>{{ $s.Time }} MS</td>
+		</tr>
 			{{end}}
 			</tbody>
 		</table>

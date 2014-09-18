@@ -83,6 +83,27 @@ func (c *Code) Status(index int64) revel.Result {
 	}
 	return c.Render(sources, pagination)
 }
+
+//get source code
+func (c *Code) View(id int64) revel.Result {
+	s := models.Source{}
+	has, _ := engine.Id(id).Get(&s)
+	data := make(map[string]interface{})
+	if !has {
+		data["status"] = false
+		data["error"] = "not exits"
+		return c.RenderJson(data)
+	}
+	code, err := s.View()
+	if err != nil {
+		data["status"] = false
+		data["error"] = err.Error()
+	}
+	data["status"] = true
+	data["code"] = code
+	return c.RenderJson(data)
+}
+
 func (c *Code) Check(id int64) revel.Result {
 	s := models.Source{}
 	has, _ := engine.Id(id).Get(&s)
@@ -93,12 +114,12 @@ func (c *Code) Check(id int64) revel.Result {
 		return c.RenderJson(data)
 	}
 	r, e := s.Check()
-	if e != nil || s.Status == models.Handling {
+	if e != nil || s.Status != models.WrongAnswer {
 		data["status"] = false
 		if e != nil {
 			data["error"] = e.Error()
 		} else {
-			data["error"] = "is handling!"
+			data["error"] = "not wrong answer"
 		}
 		return c.RenderJson(data)
 	} else {
