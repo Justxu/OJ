@@ -64,6 +64,8 @@ func (c *Code) Submit(code string, problemId int64, lang string) revel.Result {
 }
 
 func (c *Code) Status(index int64) revel.Result {
+	var moreStyles []string
+	var moreScripts []string
 	var sources []models.Source
 	pagination := &Pagination{}
 	pagination.isValidPage(c.Validation, models.Source{}, index)
@@ -81,7 +83,9 @@ func (c *Code) Status(index int64) revel.Result {
 		c.Flash.Error("pagination error")
 		c.Redirect(routes.Crash.Notice())
 	}
-	return c.Render(sources, pagination)
+	moreScripts = append(moreStyles, "js/prettify.js", "js/code_status.js")
+	moreStyles = append(moreStyles, "css/prettify.css")
+	return c.Render(moreStyles, moreScripts, sources, pagination)
 }
 
 //get source code

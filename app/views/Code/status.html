@@ -13,12 +13,6 @@
 		Tests
 	</div>
 	<div id="check" class="content">
-		<div class="left">
-			Content can appear on left
-		</div>
-		<div class="right">
-			Content can appear on right
-		</div>
 	</div>
 	<div class="actions">
 		<div class="ui button">OK</div>
@@ -48,7 +42,7 @@
 		<td>{{ $s.CreatedTime }}</td>
 		<td><a href="/User/U/{{$s.UserId}}">{{ $s.GetUserName }}</a></td>
 		<td>{{ $s.GetProblemTitle }}</td>
-		<td class="view" ><a>{{ $s.LangString }}</a></td>
+		<td class="view" ><a href="javascript:void(0)">{{ $s.LangString }}</a></td>
 		{{ with $status := $s.StatusString}}
 		{{if eq $status  "Accept"}}
 		<td class="positive">

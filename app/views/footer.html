@@ -11,45 +11,4 @@
 {{template "debug.html" .}}
 {{end}}
 </body>
-<script>
-//TODO:included only in status page and get code
-$(function(){
-	$('.id').click(function(){
-		var code_id = $(this).children().first().html().slice(1)
-		console.log("code is "+code_id);
-		var data ={};
-		data.id = code_id;
-		$('.loader').removeClass('disable');
-		$('.loader').addClass('active');
-		$.getJSON("/Code/Check",data,function(data,textStatus,jqXHR){
-			if(data.status){
-				console.log(data.report);
-				tests = data.report.Tests
-				var contents = [];
-				var divider = "<div class=\"ui section divider\"></div>"
-				for(var i=0;i<tests.length;i++){
-					var nth = i;
-					var input = tests[i].In.replace(/\n/g,"<br/>");
-					input = "Input:<br/>" + input;
-					var output = tests[i].Out.replace(/\n/g,"<br/>");
-					output = "Output:<br/>" + output;	
-					var t = "<p>#"+i+"<br/>"+input + output+"</p>";
-					contents.push(t);
-					console.log($('#check').html());
-				}
-				var content = contents.join(divider);
-				$('#check').html(content);
-				$('.loader').addClass('disable');
-				$('.loader').removeClass('active');
-				$('.ui.modal').modal('show');
-			}else{
-				$('.loader').addClass('disable');
-				$('.loader').removeClass('active');
-				$('#check').html("<p>"+data.error+"</p>")
-				console.log(data.error);
-			}
-		});
-	});
-});
-</script>
 </html>
