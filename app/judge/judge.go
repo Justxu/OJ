@@ -154,6 +154,8 @@ func getResults(out []byte) *result {
 		status = models.MemoryLimitExceeded
 	case "RE":
 		status = models.RuntimeError
+	case "FE":
+		status = models.PresentationError
 	case "WA":
 		status = models.WrongAnswer
 		wrongAnswer = results[4]
@@ -162,6 +164,7 @@ func getResults(out []byte) *result {
 	return &result{Status: status, Time: time, Memory: memory, Nth: int(nth64), WrongAnswer: wrongAnswer}
 }
 
+//add rollbcak when panic
 func HandleCodeLoop() {
 	for sources := range unHandledCodeChan {
 		fmt.Println("update")

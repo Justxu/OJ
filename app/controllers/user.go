@@ -17,7 +17,7 @@ type User struct {
 func (u *User) Rating(index int64) revel.Result {
 	var users []models.User
 	pagination := &Pagination{}
-	pagination.isValidPage(u.Validation, models.Problem{}, index)
+	pagination.isValidPage(u.Validation, models.User{}, index)
 	if u.Validation.HasErrors() {
 		u.FlashParams()
 		u.Validation.Keep()

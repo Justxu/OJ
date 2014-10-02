@@ -10,8 +10,11 @@ import (
 )
 
 var (
-	userPermission = []string{"/problems/new"}
-	logoutCheck    = []string{"/account/login"}
+	//游客访问权限
+	userPermission = []string{""}
+	//管理员权限
+	adminPermission = []string{"problems.edit", "problems.new"}
+	logoutCheck     = []string{"account.login"}
 )
 
 func inStringSlice(s string, slc []string) bool {
@@ -41,13 +44,35 @@ func connected(c *revel.Controller) bool {
 		return false
 	}
 }
+func adminAuthentication(c *revel.Controller) bool {
+	username, has := c.Session["username"]
+	if !has {
+		return false
+	}
+	u := new(models.User)
+	if has, err := engine.Where("name = ?", username).Get(u); has && err == nil {
+		if username == admin {
+			return true
+		} else {
+			return false
+		}
+	} else {
+		return false
+	}
+}
 func (c App) Index() revel.Result {
 
 	return c.Render()
 }
 
 func CheckLogin(c *revel.Controller) revel.Result {
-	if inStringSlice(strings.ToLower(c.Request.URL.Path), userPermission) {
+	if inStringSlice(strings.ToLower(c.Action), adminPermission) {
+		if !adminAuthentication(c) {
+			c.Flash.Error("没有管理员权限")
+			return c.Redirect(routes.Problems.Index(0))
+		}
+	}
+	if inStringSlice(strings.ToLower(c.Action), userPermission) {
 		if ok := connected(c); !ok {
 			c.Flash.Error("请先登陆")
 			return c.Redirect(routes.Account.Login())
@@ -55,7 +80,7 @@ func CheckLogin(c *revel.Controller) revel.Result {
 			return nil
 		}
 	}
-	if inStringSlice(strings.ToLower(c.Request.URL.Path), logoutCheck) {
+	if inStringSlice(strings.ToLower(c.Action), logoutCheck) {
 		if ok := connected(c); ok {
 			c.Flash.Error("不可以重复登录")
 			return c.Redirect(routes.Problems.Index(0))

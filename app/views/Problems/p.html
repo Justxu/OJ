@@ -20,8 +20,10 @@
 	{{Text .prob.OutputSample}}
 </div>
 	{{if .session.username }}
-		<a class="ui button" href="/problems/answer/{{.prob.Id}}">submit</a>
-		<a class="ui button" href="/Problems/Edit/{{.prob.Id}}">edit</a>
+	<a class="ui button" href="/problems/answer/{{.prob.Id}}">submit</a>
+	{{end}}
+	{{if isAdmin .session.username}}
+	<a class="ui button" href="/Problems/Edit/{{.prob.Id}}">edit</a>
 	{{end}}
 	</div>
 </div>

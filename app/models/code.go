@@ -27,6 +27,7 @@ const (
 	Handling
 	RuntimeError
 	PresentationError
+	PanicError
 )
 const (
 	Go int = iota
@@ -43,10 +44,11 @@ var (
 		WrongAnswer:         "Wrong Answer",
 		TimeLimitExceeded:   "Time Limit Exceeded",
 		MemoryLimitExceeded: "Memory Limit Exceeded",
-		UnHandled:           "UnHandled",
+		UnHandled:           "Unhandled",
 		Handling:            "Handling",
 		RuntimeError:        "Runtime Error",
 		PresentationError:   "Present Error",
+		PanicError:          "Panic Error",
 	}
 	LangMap = map[int]string{
 		Go:  "go",
