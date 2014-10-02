@@ -63,10 +63,10 @@ func (p *Problems) P(index int) revel.Result {
 }
 
 func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest []byte) revel.Result {
-	p.Validation.Required(problem.Title)
+	p.Validation.Required(problem.Title).Message("Title Required")
 	p.Validation.Min(int(problem.MemoryLimit), 1).Message("TimeLimit Required")
 	p.Validation.Min(int(problem.TimeLimit), 1).Message("MemoryLimit Required")
-	p.Validation.Required(problem.Description)
+	p.Validation.Required(problem.Description).Message("Description Required")
 	p.Validation.Required(outputTest).Message("output file needed")
 	p.Validation.Required(inputTest).Message("input file needed")
 	path := problem.TestPath()

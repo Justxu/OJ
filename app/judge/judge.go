@@ -152,6 +152,8 @@ func getResults(out []byte) *result {
 		status = models.TimeLimitExceeded
 	case "MLE":
 		status = models.MemoryLimitExceeded
+	case "RE":
+		status = models.RuntimeError
 	case "WA":
 		status = models.WrongAnswer
 		wrongAnswer = results[4]

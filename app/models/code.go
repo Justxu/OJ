@@ -12,6 +12,11 @@ import (
 	"code.google.com/p/go-uuid/uuid"
 )
 
+/*
+new error status can noly be added
+from the bottom because the status number
+in database can not be changed
+*/
 const (
 	Accept int = iota
 	CompileError
@@ -20,6 +25,8 @@ const (
 	MemoryLimitExceeded
 	UnHandled
 	Handling
+	RuntimeError
+	PresentationError
 )
 const (
 	Go int = iota
@@ -38,6 +45,8 @@ var (
 		MemoryLimitExceeded: "Memory Limit Exceeded",
 		UnHandled:           "UnHandled",
 		Handling:            "Handling",
+		RuntimeError:        "Runtime Error",
+		PresentationError:   "Present Error",
 	}
 	LangMap = map[int]string{
 		Go:  "go",

@@ -12,6 +12,7 @@ problem/
 log/
 tmp/
 bin/*
+reminder.mkd
 app.conf
 misc.conf
 *.swp
