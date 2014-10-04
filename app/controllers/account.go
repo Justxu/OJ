@@ -213,6 +213,7 @@ func (c Account) Modify(user models.User) revel.Result {
 			if err != nil {
 				fmt.Println(err)
 			}
+			c.Session["username"] = user.Name
 			return c.Redirect(routes.User.Profile())
 		} else {
 			c.Flash.Error("passwords not match")

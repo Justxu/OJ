@@ -11,8 +11,6 @@ import (
 	"github.com/revel/revel"
 )
 
-//处理最新出现的c代码的问题
-
 type Code struct {
 	*revel.Controller
 }
