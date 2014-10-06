@@ -13,8 +13,8 @@ type Problem struct {
 	TimeLimit      int64
 	MemoryLimit    int64
 	Description    string `xorm:"TEXT"`
-	InputSample    string `xorm:"varchar(256)"`
-	OutputSample   string `xorm:"varchar(256)"`
+	InputSample    string `xorm:"varchar(512)"`
+	OutputSample   string `xorm:"varchar(512)"`
 	InputTestPath  string //input test path
 	OutputTestPath string //output test path
 }
