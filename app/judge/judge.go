@@ -176,7 +176,7 @@ func HandleCodeLoop() {
 			}
 			result, err := Judge(v.LangString(), v.Path, problem.InputTestPath, problem.OutputTestPath, problem.TimeLimit, problem.MemoryLimit)
 			if err != nil {
-				panic(err)
+				fmt.Println(err)
 			} else {
 				v.Status = result.Status
 				v.Time = time.Duration(result.Time) / time.Millisecond
@@ -187,7 +187,6 @@ func HandleCodeLoop() {
 					n, err := engine.Id(v.Id).Cols("status", "time", "memory", "nth").Update(&v)
 					if err != nil {
 						fmt.Println(n)
-						panic(err)
 					}
 					p := new(models.Problem)
 					_, err = engine.Id(v.ProblemId).Incr("solved", 1).Update(p)
@@ -200,7 +199,6 @@ func HandleCodeLoop() {
 					n, err := engine.Id(v.Id).Cols("status", "time", "memory", "nth", "wrong_answer").Update(&v)
 					if err != nil {
 						fmt.Println(n)
-						panic(err)
 					}
 				}
 			}
