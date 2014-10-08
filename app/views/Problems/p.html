@@ -14,6 +14,9 @@
 	</div>
 	<div class="ui clearing divider"></div>
 	{{Text .prob.Description}}
+	{{if .prob.ImgSrc }}
+	<img class="ui medium image" src="{{.prob.ImgSrc}}">
+	{{end}}
 	<p>Input Sample</p>
 	{{Text .prob.InputSample}}
 	<p>Output Sample</p>

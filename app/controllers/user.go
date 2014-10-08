@@ -23,7 +23,7 @@ func (u *User) Rating(index int64) revel.Result {
 		u.Validation.Keep()
 		return u.Redirect(routes.Crash.Notice())
 	}
-	err := engine.Limit(perPage, perPage*(pagination.current-1)).Desc("solved").Find(&users)
+	err := engine.Limit(perPage, perPage*(pagination.current-1)).Asc("id").Desc("solved").Find(&users)
 	if err != nil {
 		fmt.Println(err)
 	}

@@ -71,6 +71,9 @@ func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest []byte)
 	p.Validation.Required(inputTest).Message("input file needed")
 	p.Validation.MaxSize(problem.InputSample, 256).Message("input sample too long")
 	p.Validation.MaxSize(problem.OutputSample, 512).Message("output sample too long")
+	// math url
+	//p.Validation.Match(problem.ImgSrc,nil).Message("invalid url")
+	// match url
 	path := problem.TestPath()
 	problem.InputTestPath = path + "/inputTest"
 	problem.OutputTestPath = path + "/outputTest"

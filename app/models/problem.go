@@ -17,6 +17,7 @@ type Problem struct {
 	OutputSample   string `xorm:"varchar(512)"`
 	InputTestPath  string //input test path
 	OutputTestPath string //output test path
+	ImgSrc         string //url
 }
 
 func (p *Problem) TestPath() string {
