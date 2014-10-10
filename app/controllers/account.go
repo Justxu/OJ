@@ -197,10 +197,17 @@ func (c Account) PostReset(user models.User) revel.Result {
 }
 
 func (c Account) Edit() revel.Result {
-	return c.Render()
+	username := c.Session["username"]
+	return c.Render(username)
 }
 
 func (c Account) Modify(user models.User) revel.Result {
+	c.Validation.Required(user.Name).Message("用户名不能为空")
+	if c.Validation.HasErrors() {
+		c.Validation.Keep()
+		c.FlashParams()
+		return c.Redirect(routes.Account.Edit())
+	}
 	if user.HasName() {
 		return c.Redirect(routes.User.Profile())
 	}

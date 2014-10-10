@@ -74,7 +74,7 @@ func (c *Code) Status(index int64) revel.Result {
 		c.Validation.Keep()
 		return c.Redirect(routes.Crash.Notice())
 	}
-	err := engine.Desc("created_at").Limit(perPage, perPage*(pagination.current-1)).Find(&sources)
+	err := engine.Asc("id").Desc("created_at").Limit(perPage, perPage*(pagination.current-1)).Find(&sources)
 	if err != nil {
 		fmt.Println(err)
 	}
