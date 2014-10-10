@@ -1,6 +1,16 @@
 a {
 	text-decoration:none;
 }
+a:visited{
+	color:#505050;
+}
+a:link{
+	color:#070707;
+}
+
+.sticky a:visited {
+	color:#1D1C1C;
+}
 
 .buttons{
 	padding-top: 5%;
