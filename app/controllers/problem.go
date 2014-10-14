@@ -121,9 +121,18 @@ func (p *Problems) EditPost(problem models.Problem, inputTest, outputTest []byte
 	}()
 	if inputTest != nil {
 		problem.InputTestPath = path.Dir(problem.InputTestPath) + "/inputTest"
+		_, err := util.WriteFile(problem.InputTestPath, inputTest)
+		if err != nil {
+			fmt.Println(err)
+		}
+
 	}
 	if outputTest != nil {
 		problem.OutputTestPath = path.Dir(problem.OutputTestPath) + "/outputTest"
+		_, err := util.WriteFile(problem.OutputTestPath, outputTest)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 	fmt.Println("update id is")
 	id, err := strconv.ParseInt(p.Session["id"], 10, 64)

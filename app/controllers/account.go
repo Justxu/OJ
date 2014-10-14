@@ -68,7 +68,7 @@ func (c Account) PostRegist(user models.User) revel.Result {
 	}
 	c.Session["username"] = user.Name
 	subject := "activate password"
-	content := `<h2><a href="http://localhost:9000/Account/Activate/` + user.ActiveCode + `">activate account</a></h2>`
+	content := `<h2><a href="` + appAddr + ":" + appPort + `/Account/Activate/` + user.ActiveCode + `">activate account</a></h2>`
 	//stmp is defined in ./init.go
 	err := SendMail(subject, content, smtpConfig.Username, []string{user.Email}, smtpConfig, true)
 	if err != nil {
@@ -82,7 +82,7 @@ func (c Account) ResentActiveCode() revel.Result {
 	username := c.Session["username"]
 	user := models.GetCurrentUser(username)
 	subject := "activate password"
-	content := `<h2><a href="http://localhost:9000/Account/Activate/` + user.ActiveCode + `>activate account</a></h2>`
+	content := `<h2><a href="` + appAddr + `:` + `/Account/Activate/` + user.ActiveCode + `>activate account</a></h2>`
 	//stmp is defined in ./init.go
 	err := SendMail(subject, content, smtpConfig.Username, []string{user.Email}, smtpConfig, true)
 	if err != nil {
@@ -134,7 +134,7 @@ func (c Account) SendResetEmail(email string) revel.Result {
 			fmt.Println(err)
 		}
 		subject := "Reset Password"
-		content := `<h2><a href="http://localhost:9000/Account/Reset/` + user.ResetCode + `">Reset Password</a></h2>`
+		content := `<h2><a href="` + appAddr + `:` + appPort + `/Account/Reset/` + user.ResetCode + `">Reset Password</a></h2>`
 		//stmp is defined in ./init.go
 		SendMail(subject, content, smtpConfig.Username, []string{email}, smtpConfig, true)
 		c.Flash.Success("Email has been sent, pleas check it.")
