@@ -176,29 +176,55 @@ func HandleCodeLoop() {
 			}
 			result, err := Judge(v.LangString(), v.Path, problem.InputTestPath, problem.OutputTestPath, problem.TimeLimit, problem.MemoryLimit)
 			if err != nil {
+				//if panic err,it is caused by sandbox errors
 				fmt.Println(err)
+				v.Status = models.PanicError
+				_, err := engine.Id(v.Id).Cols("status").Update(&v)
+				if err != nil {
+					fmt.Println(err)
+				}
 			} else {
 				v.Status = result.Status
 				v.Time = time.Duration(result.Time) / time.Millisecond
 				v.Memory = result.Memory
 				v.Nth = result.Nth
 				v.WrongAnswer = result.WrongAnswer
+				transaction := engine.NewSession()
 				if v.Status == models.Accept {
-					n, err := engine.Id(v.Id).Cols("status", "time", "memory", "nth").Update(&v)
+					_, err := transaction.Id(v.Id).Cols("status", "time", "memory", "nth").Update(&v)
 					if err != nil {
-						fmt.Println(n)
+						//if panic error,it is caused by database design,like interati constraints
+						err = transaction.Rollback()
+						if err != nil {
+							fmt.Println(err)
+						}
+						v.Status = models.PanicError
+						_, err = engine.Id(v.Id).Cols("status").Update(&v)
+						if err != nil {
+							fmt.Println(err)
+						}
+					} else {
+						p := new(models.Problem)
+						_, err = engine.Id(v.ProblemId).Incr("solved", 1).Update(p)
+						if err != nil {
+							fmt.Println(err)
+						}
+						u := new(models.User)
+						_, err = engine.Id(v.UserId).Incr("solved", 1).Update(u)
 					}
-					p := new(models.Problem)
-					_, err = engine.Id(v.ProblemId).Incr("solved", 1).Update(p)
-					if err != nil {
-						fmt.Println(err)
-					}
-					u := new(models.User)
-					_, err = engine.Id(v.UserId).Incr("solved", 1).Update(u)
 				} else {
-					n, err := engine.Id(v.Id).Cols("status", "time", "memory", "nth", "wrong_answer").Update(&v)
+					_, err := engine.Id(v.Id).Cols("status", "time", "memory", "nth", "wrong_answer").Update(&v)
+					//if panic error,it is caused by database design,like interati constraints
 					if err != nil {
-						fmt.Println(n)
+						err = transaction.Rollback()
+						if err != nil {
+							fmt.Println(err)
+						}
+						v.Status = models.PanicError
+						_, err = engine.Id(v.Id).Cols("status").Update(&v)
+						if err != nil {
+							fmt.Println(err)
+						}
 					}
 				}
 			}
