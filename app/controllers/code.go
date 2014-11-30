@@ -72,7 +72,7 @@ func (c *Code) Status(index int64) revel.Result {
 	if c.Validation.HasErrors() {
 		c.FlashParams()
 		c.Validation.Keep()
-		return c.Redirect(routes.Crash.Notice())
+		return c.Redirect(routes.Notice.Crash())
 	}
 	err := engine.Desc("created_at").Asc("id").Limit(perPage, perPage*(pagination.current-1)).Find(&sources)
 	if err != nil {
@@ -81,7 +81,7 @@ func (c *Code) Status(index int64) revel.Result {
 	err = pagination.Page(perPage, c.Request.Request.URL.Path)
 	if err != nil {
 		c.Flash.Error("pagination error")
-		c.Redirect(routes.Crash.Notice())
+		c.Redirect(routes.Notice.Crash())
 	}
 	moreScripts = append(moreStyles, "js/prettify.js", "js/code_status.js")
 	moreStyles = append(moreStyles, "css/prettify.css")

@@ -21,7 +21,7 @@ func (u *User) Rating(index int64) revel.Result {
 	if u.Validation.HasErrors() {
 		u.FlashParams()
 		u.Validation.Keep()
-		return u.Redirect(routes.Crash.Notice())
+		return u.Redirect(routes.Notice.Crash())
 	}
 	err := engine.Limit(perPage, perPage*(pagination.current-1)).Desc("solved").Asc("id").Find(&users)
 	if err != nil {
@@ -30,7 +30,7 @@ func (u *User) Rating(index int64) revel.Result {
 	err = pagination.Page(perPage, u.Request.Request.URL.Path)
 	if err != nil {
 		u.Flash.Error(err.Error())
-		u.Redirect(routes.Crash.Notice())
+		u.Redirect(routes.Notice.Crash())
 	}
 	return u.Render(users, pagination)
 }

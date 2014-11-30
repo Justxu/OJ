@@ -8,15 +8,18 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/ggaaooppeenngg/OJ/app/models"
+	"github.com/ggaaooppeenngg/OJ/app/routes"
+
 	"github.com/revel/revel"
 )
 
 // ouput errors
-type Crash struct {
+type Notice struct {
 	*revel.Controller
 }
 
-func (c *Crash) Notice() revel.Result {
+func (c *Notice) Crash() revel.Result {
 	return c.Render()
 }
 
@@ -117,4 +120,22 @@ func (p *Pagination) Html() template.HTML {
 /* replace \n with <p>*/
 func Text(input string) template.HTML {
 	return template.HTML("<p>" + strings.Replace(input, "\n", "<br>", -1) + "</p>")
+}
+
+//checkout if it's admin
+func IsAdmin(a interface{}) bool {
+	if a == nil {
+		return false
+	} else {
+		return a.(string) == admin
+	}
+}
+func Search(key string, c *revel.Controller) revel.Result {
+	var problems []models.Problem
+	err := engine.Where("title = ? ", key).Find(&problems)
+	if err != nil {
+		c.Flash.Error("error %s", err.Error())
+		c.Redirect(routes.Notice.Crash())
+	}
+	return c.Render(problems)
 }

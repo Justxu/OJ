@@ -18,6 +18,7 @@ type Problem struct {
 	InputTestPath  string //input test path
 	OutputTestPath string //output test path
 	ImgSrc         string //url
+	IsValid        bool   //flag for checking probelm offered by ordinary users,
 }
 
 func (p *Problem) TestPath() string {

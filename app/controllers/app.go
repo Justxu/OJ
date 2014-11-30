@@ -14,7 +14,7 @@ var (
 	userPermission = []string{""}
 	//管理员权限
 	adminPermission = []string{"problems.edit", "problems.new"}
-	logoutCheck     = []string{"account.login"}
+	logoutCheck     = []string{"account.login", "problems.new"}
 )
 
 func inStringSlice(s string, slc []string) bool {
