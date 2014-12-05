@@ -6,7 +6,7 @@
 <meta name="baidu-site-verification" content="0tJPgMPSI7" />
 <link rel="stylesheet" type="text/css" href="/public/css/semantic.min.css">
 <link rel="stylesheet" type="text/css" href="/public/css/general.css">
-<link rel="shortcut icon" type="image/jpg" href="/public/images/favicon.jpg">
+<link rel="shortcut icon" type="image/jpg" href="/public/images/favicon.png">
 {{range .moreStyles}}
 	<link rel="stylesheet" type="text/css" href="/public/{{.}}">
 {{end}}
@@ -20,8 +20,11 @@
 <div class="ui page grid">
 	<a href="/"><img class="left floated image logo " src="/public/images/logo.jpg"/></a>
 	<div class="ui right floated buttons">
-		{{if isAdmin .session.username}}
+		{{if .session.username}}
 			<a class="ui small button" href="/Problems/New">new</a>
+            {{if isAdmin .session.username}}
+			<a class="ui small button" href="/Problems/Posts">posts</a>
+            {{end}}
 		{{end}}
 		{{if eq .RunMode "dev"}}
 			<a class="ui small button" href="/@tests">tests</a>
@@ -29,7 +32,7 @@
 		{{if .session.username }}
 			<a class="ui small blue button" href="/Account/Logout">logout</a>
 		{{else}}
-			<a class="ui small button" href="/Account/Regist">regist</a>
+            <a class="ui small button" href="/Account/Regist">register</a>
 			<a class="ui small blue button" href="/Account/Login">login</a>
 		{{end}}
 	</div>

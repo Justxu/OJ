@@ -1,9 +1,9 @@
 {{template "flash.html" .}}
 <div class="ui page grid sticky">
 	<div class="four wide column">
-		<div class="ui left aligned basic secondary segment">
+		<div class="ui left aligned basic segment">
 			<p>Author <a href="http://www.github.com/ggaaooppeenngg/">ggaaooppeenngg</a></p>
-			<p>Powered by <a href="http://www.golang.org/">Golang</a></p>
+            <p>Powered by <a href="http://www.golang.org/">Golang</a>,<a href="https://github.com/revel/revel">revel</a>,<a href="https://github.com/go-xorm/xorm">Xorm</a></p>
 		</div>
 	</div>
 </div>
@@ -17,6 +17,7 @@
 	var ua = navigator.userAgent.toLowerCase();
 	if (window.ActiveXObject)
 		Sys.ie = ua.match(/msie ([\d.]+)/)[1]
+    /*
 	else if (document.getBoxObjectFor)
 		Sys.firefox = ua.match(/firefox\/([\d.]+)/)[1]
 	else if (window.MessageEvent && !document.getBoxObjectFor)
@@ -35,6 +36,7 @@
 	if(Sys.chrome) console.log('Chrome: '+Sys.chrome);
 	if(Sys.opera) console.log('Opera: '+Sys.opera);
 	if(Sys.safari) console.log('Safari: '+Sys.safari);
+   */
 </script>
 </body>
 </html>

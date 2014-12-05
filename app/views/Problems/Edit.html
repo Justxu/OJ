@@ -17,36 +17,23 @@
 			</div>
 		</div>
 		<div class="field">
-			<label>Image Link</label>
-			<input name="problem.ImgSrc" placeholder="Image Source" type="text" value="{{.problem.ImgSrc}}">
-			{{if .prob.ImgSrc }}
-			<img class="ui medium image" src="{{.prob.ImgSrc}}">
-			{{end}}
-		<div>
-		<div class="field">
-			<label>Description</label>
-			<textarea name="problem.Description">
-				{{.problem.Description}}
-			</textarea>
+            <label>Description</label>
+			<textarea name="problem.Description">{{.problem.Description}}</textarea>
 		</div>
 		<div class="field">
 			<label>Input Sample</label>
-			<textarea name="problem.InputSample">
-			{{.problem.InputSample}}
-			</textarea>
+			<textarea name="problem.InputSample">{{.problem.InputSample}}</textarea>
 		</div>
 		<div class="field">
 			<label>Output Sample</label>
-			<textarea name="problem.OutputSample">
-			{{.problem.OutputSample}}
-			</textarea>
+			<textarea name="problem.OutputSample">{{.problem.OutputSample}}</textarea>
 		</div>
 		<div class="field">
-			<label>Input File</label>
+			<label>Change input File</label>
 			<input name="inputTest" placeholder="input test file" type="file">
 		</div>
 		<div class="field">
-			<label>Output File</label>
+			<label>Change output File</label>
 			<input name="outputTest" placeholder="output test file" type="file">
 		</div>
 		<button class="ui blue submit button">Submit</button>

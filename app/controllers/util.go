@@ -23,6 +23,11 @@ func (c *Notice) Crash() revel.Result {
 	return c.Render()
 }
 
+//
+func (c *Notice) Search() revel.Result {
+	return nil
+}
+
 /*
 
 	This is module is not a controller but a util to show pagination
@@ -119,7 +124,8 @@ func (p *Pagination) Html() template.HTML {
 
 /* replace \n with <p>*/
 func Text(input string) template.HTML {
-	return template.HTML("<p>" + strings.Replace(input, "\n", "<br>", -1) + "</p>")
+	//markdown class is used by marked.js to render markdown text
+	return template.HTML("<p class=\"markdown\">" + input + "</p>")
 }
 
 //checkout if it's admin

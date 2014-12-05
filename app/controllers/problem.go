@@ -68,7 +68,10 @@ func (p *Problems) P(index int) revel.Result {
 		p.Flash.Error("problem id error %d", index)
 		p.Redirect(routes.Problems.Index(0))
 	}
-	return p.Render(prob)
+	//markdown script
+	var moreScripts []string
+	moreScripts = append(moreScripts, "js/marked.js")
+	return p.Render(prob, moreScripts)
 }
 
 func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest []byte) revel.Result {
@@ -80,15 +83,7 @@ func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest []byte)
 	p.Validation.Required(inputTest).Message("input file needed")
 	p.Validation.MaxSize(problem.InputSample, 512).Message("input sample too long")
 	p.Validation.MaxSize(problem.OutputSample, 512).Message("output sample too long")
-	// match url
-	if !validPicture(problem.ImgSrc) {
-		e := &revel.ValidationError{
-			Message: "picture is not accessable",
-			Key:     "problem.error",
-		}
-		p.Validation.Errors = append(p.Validation.Errors, e)
-	}
-	p.Validation.Match(problem.ImgSrc, urlMatch).Message("invalid url")
+
 	path := problem.TestPath()
 	problem.InputTestPath = path + "/inputTest"
 	problem.OutputTestPath = path + "/outputTest"
@@ -100,7 +95,7 @@ func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest []byte)
 	if IsAdmin(p.Session["username"]) {
 		problem.IsValid = true
 	} else {
-		//if user is not admin,check the problem effectiveness manually
+		//if user is not admin,checked the problem effectiveness manually by administrators
 		problem.IsValid = false
 	}
 	_, err := util.WriteFile(problem.InputTestPath, inputTest)
@@ -137,10 +132,11 @@ func (p *Problems) Posts(index int64) revel.Result {
 		p.Flash.Error(err.Error())
 		return p.Redirect(routes.Notice.Crash())
 	}
-	return p.Render()
+	return p.Render(problems)
 }
 func (p *Problems) Admit(id int64) revel.Result {
 	problem := &models.Problem{Id: id}
+	problem.IsValid = true
 	_, err := engine.Cols("is_valid").Update(problem)
 	if err != nil {
 		p.Flash.Error(err.Error())
@@ -155,7 +151,11 @@ func (p *Problems) New() revel.Result {
 
 func (p *Problems) Delete(id int64) revel.Result {
 	problem := &models.Problem{Id: id}
-	engine.Delete(problem)
+	_, err := engine.Delete(problem)
+	if err != nil {
+		p.Flash.Error(err.Error())
+		return p.Redirect(routes.Notice.Crash())
+	}
 	return p.Redirect(routes.Problems.Index(0))
 }
 

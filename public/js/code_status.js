@@ -1,4 +1,26 @@
 $(function(){
+    $('.status').click(function(){
+        var code_id = $(this).siblings().first().children().first().html().slice(1);
+        console.log(code_id);
+        var data = {};
+		$('.loader').removeClass('disable');
+		$('.loader').addClass('active');
+        data.id = code_id;
+        $.getJSON("/Code/GetPanic",data,function(data,textStatus,jqXHR){
+            if(data.status){
+                var panic = data.panic;
+                $('#check').empty(); 
+				$('#check').html("<p>"+panic+"</p>");
+			    $('.loader').addClass('disable');
+			    $('.loader').removeClass('active');
+			    $('.ui.modal').modal('show');
+            }else{
+			    $('.loader').addClass('disable');
+			    $('.loader').removeClass('active');
+                console.log(data.error);
+            };
+        });
+    });
 	$('.view').click(function(){
 		var code_id = $(this).siblings().first().children().first().html().slice(1);
 		console.log(code_id);

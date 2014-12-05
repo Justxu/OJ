@@ -49,5 +49,6 @@ DOCKER_OPTS="--dns 202.118.66.6 --dns 202.118.66.8"
 
 ###TODO:
 
-~~1.  limit the resource of every test instead of total tests~~
+~~1. limit the resource of every test instead of total tests~~
+
 2.  public problem contribution is acceptable

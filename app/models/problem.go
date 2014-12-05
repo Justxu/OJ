@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"strings"
 
 	"code.google.com/p/go-uuid/uuid"
@@ -17,10 +18,20 @@ type Problem struct {
 	OutputSample   string `xorm:"varchar(512)"`
 	InputTestPath  string //input test path
 	OutputTestPath string //output test path
-	ImgSrc         string //url
 	IsValid        bool   //flag for checking probelm offered by ordinary users,
+	PosterId       int64  //Post id
 }
 
+func (p *Problem) Poster() string {
+	user := new(User)
+	has, err := engine.Id(p.PosterId).Get(user)
+	if err != nil || !has {
+		fmt.Println(err)
+		return "null user"
+	} else {
+		return user.Name
+	}
+}
 func (p *Problem) TestPath() string {
 	ui := uuid.NewUUID()
 	path := strings.Replace(ui.String(), "-", "", -1)

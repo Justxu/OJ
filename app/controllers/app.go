@@ -10,11 +10,12 @@ import (
 )
 
 var (
-	//游客访问权限
-	userPermission = []string{""}
+	//用户访问权限,也就时登陆以后才可以使用的权限
+	userPermission = []string{"problems.new"}
 	//管理员权限
-	adminPermission = []string{"problems.edit", "problems.new"}
-	logoutCheck     = []string{"account.login", "problems.new"}
+	adminPermission = []string{"problems.edit"}
+	//重复登陆检查
+	logoutCheck = []string{"account.login"}
 )
 
 func inStringSlice(s string, slc []string) bool {

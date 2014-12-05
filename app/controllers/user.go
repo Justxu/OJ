@@ -37,7 +37,11 @@ func (u *User) Rating(index int64) revel.Result {
 
 func (u *User) ProfileVisit(id int64) revel.Result {
 	var user models.User
-	engine.Id(id).Get(&user)
+	has, err := engine.Id(id).Get(&user)
+	if !has || err != nil {
+		fmt.Println(has)
+		u.Redirect(routes.Notice.Crash())
+	}
 	return u.Render(user)
 }
 

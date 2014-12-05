@@ -75,6 +75,7 @@ type Source struct {
 	Path        string //file path
 	Nth         int    //the number of the test not passed
 	WrongAnswer string //the last wrong answer
+	PanicError  string //panic ouput
 
 }
 

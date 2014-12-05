@@ -9,17 +9,19 @@
 <div class="ui piled segment">
 	<div class="ui segment center aligned">
 		<h3>{{.prob.Title}}</h3>
-		<p>Time Limit {{.prob.TimeLimit}}</p>
-		<p>Memory Limit {{.prob.MemoryLimit}}</p>
+        <p>TIME LIMIT  <span class="ui red tag label large">{{.prob.TimeLimit}}</span></p>
+        <p>MEMORY LIMIT <span class="ui purple tag label large">{{.prob.MemoryLimit}}</span></p>
 	</div>
-	<div class="ui clearing divider"></div>
 	{{Text .prob.Description}}
-	{{if .prob.ImgSrc }}
-	<img class="ui medium image" src="{{.prob.ImgSrc}}">
-	{{end}}
-	<p>Input Sample</p>
+    <div class="ui divider"></div>
+    <div class="ui inverted green segment">
+	<p class="inverted">Input Sample</p>
+    </div>
 	{{Text .prob.InputSample}}
+    <div class="ui divider"></div>
+    <div class="ui inverted blue segment">
 	<p>Output Sample</p>
+    </div>
 	{{Text .prob.OutputSample}}
 </div>
 	{{if .session.username }}
@@ -27,7 +29,13 @@
 	{{end}}
 	{{if isAdmin .session.username}}
 	<a class="ui button" href="/Problems/Edit/{{.prob.Id}}">edit</a>
+	<a class="ui red button" href="/Problems/Delete?id={{.prob.Id}}">delete</a>
 	{{end}}
 	</div>
 </div>
+<script>
+    $('.markdown').each(function(){
+       $(this).html(marked($(this).text()));
+    });
+</script>
 {{template "footer.html" .}}

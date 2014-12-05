@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -32,6 +33,7 @@ type result struct {
 	Memory      int64
 	Nth         int
 	WrongAnswer string
+	PanicOutput string //异常的输出
 }
 
 func init() {
@@ -91,16 +93,22 @@ func test(path string) []byte {
 */
 
 //judge input and output
-func Judge(language string, filePath, inputPath, outputPath string, timeLimit, memoryLimit int64) (*result, error) {
+func Judge(language string, filePath, inputPath, outputPath string, timeLimit, memoryLimit int64) *result {
 	defer os.Remove(filePath + "/tmp")
 	cmd := exec.Command("sandbox", "--lang="+language, "--time="+strconv.FormatInt(timeLimit, 10), "--memory="+strconv.FormatInt(memoryLimit, 10), "-c", "-s", filePath+"/tmp."+language, "-b", filePath+"/tmp", "-i", inputPath, "-o", outputPath)
 	testOut, err := cmd.CombinedOutput()
+	fmt.Println(cmd.Args)
 	fmt.Printf("%s\n", testOut)
 	if err != nil {
-		return getResults(testOut), err
-	} else {
-		return getResults(testOut), nil
+		fmt.Println(err)
+		return &result{Status: models.PanicError, PanicOutput: err.Error()}
 	}
+	//panic output
+	if !regexp.MustCompile(`\w\w:\d+:\d+:([\s\S]*)`).Match(testOut) {
+		fmt.Printf("out put format error:\n%s\n", testOut)
+		return &result{Status: models.PanicError, PanicOutput: fmt.Sprintf("%s", testOut)}
+	}
+	return getResults(testOut)
 }
 
 /*
@@ -140,17 +148,24 @@ func getResults(out []byte) *result {
 	statuss := results[0]
 	var status int
 	var wrongAnswer string
-	memory, _ := strconv.ParseInt(results[1], 0, 64)
-	time, _ := strconv.ParseInt(results[2], 0, 64)
-	nth64, _ := strconv.ParseInt(results[3], 0, 64)
+	var memory, time, nth64 int64
+	if len(results) > 1 {
+		memory, _ = strconv.ParseInt(results[1], 0, 64)
+	}
+	if len(results) > 2 {
+		time, _ = strconv.ParseInt(results[2], 0, 64)
+	}
+	if len(results) > 3 {
+		nth64, _ = strconv.ParseInt(results[3], 0, 64)
+	}
 	switch statuss {
 	case "AC":
 		status = models.Accept
 	case "CE":
 		status = models.CompileError
-	case "TLE":
+	case "TL":
 		status = models.TimeLimitExceeded
-	case "MLE":
+	case "ML":
 		status = models.MemoryLimitExceeded
 	case "RE":
 		status = models.RuntimeError
@@ -158,7 +173,9 @@ func getResults(out []byte) *result {
 		status = models.PresentationError
 	case "WA":
 		status = models.WrongAnswer
-		wrongAnswer = results[4]
+		if len(results) > 4 {
+			wrongAnswer = results[4]
+		}
 		nth64 += 1
 	}
 	return &result{Status: status, Time: time, Memory: memory, Nth: int(nth64), WrongAnswer: wrongAnswer}
@@ -174,12 +191,12 @@ func HandleCodeLoop() {
 			if err != nil {
 				fmt.Println(err)
 			}
-			result, err := Judge(v.LangString(), v.Path, problem.InputTestPath, problem.OutputTestPath, problem.TimeLimit, problem.MemoryLimit)
-			if err != nil {
+			result := Judge(v.LangString(), v.Path, problem.InputTestPath, problem.OutputTestPath, problem.TimeLimit, problem.MemoryLimit)
+			if result.Status == models.PanicError {
 				//if panic err,it is caused by sandbox errors
-				fmt.Println(err)
 				v.Status = models.PanicError
-				_, err := engine.Id(v.Id).Cols("status").Update(&v)
+				v.PanicError = result.PanicOutput
+				_, err := engine.Id(v.Id).Cols("status,panic_error").Update(&v)
 				if err != nil {
 					fmt.Println(err)
 				}

@@ -108,6 +108,21 @@ func (c *Code) View(id int64) revel.Result {
 	return c.RenderJson(data)
 }
 
+//get panic error of the code
+func (c *Code) GetPanic(id int64) revel.Result {
+	s := new(models.Source)
+	has, _ := engine.Id(id).Get(s)
+	data := make(map[string]interface{})
+	if !has {
+		data["status"] = false
+		data["error"] = "not exist!"
+	} else {
+		data["panic"] = s.PanicError
+		data["status"] = true
+	}
+	return c.RenderJson(data)
+}
+
 func (c *Code) Check(id int64) revel.Result {
 	s := models.Source{}
 	has, _ := engine.Id(id).Get(&s)
