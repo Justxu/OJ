@@ -13,6 +13,10 @@ func (c *Notice) Crash() revel.Result {
 	return c.Render()
 }
 
+func (c *Notice) Info() revel.Result {
+	return c.Render()
+}
+
 //
 func (c *Notice) Search() revel.Result {
 	return nil

@@ -90,6 +90,7 @@ GET     /user/solved                            User.Solved
 
 # Notice
 GET     /notice/crash                           Notice.Crash
+GET     /info                                   Notice.Info
 
 # Catch all
 #*       /:controller/:action                    :controller.:action
