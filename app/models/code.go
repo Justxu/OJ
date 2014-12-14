@@ -9,6 +9,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ggaaooppeenngg/util"
+
 	"code.google.com/p/go-uuid/uuid"
 )
 
@@ -117,9 +119,23 @@ func check(err error) {
 		panic(err)
 	}
 }
+
+//TODO delete all files
+func (s *Source) Delete() error {
+	_, err := engine.Id(s.Id).Delete(new(Source))
+	if err != nil {
+		return err
+	} else {
+		if util.IsExist(s.Path) {
+			return os.RemoveAll(s.Path)
+		} else {
+			return nil
+		}
+	}
+}
+
 func (s *Source) View() (string, error) {
-	source := new(Source)
-	_, err := engine.Id(s.Id).Get(source)
+	_, err := engine.Id(s.Id).Get(new(Source))
 	if err != nil {
 		return "", err
 	}

@@ -11,6 +11,7 @@
 	{{template "left_side.html" .}}
   <div class="twelve wide column">
 <div class="ui divided list">
+    {{if .problems }}
 	{{range $k,$v:= .problems}}
 	<div class="item">
 		<div class="right floated ui label">
@@ -23,6 +24,11 @@
             <a class="ui small green button" href="/problem/admit/{{$v.Id}}">admit</a>
 		</div>
 	</div>
+    {{end}}
+    {{else}}
+    <div class="segment">
+        <p>There is no post</p>
+    </div>
 	{{end}}
 </div>
 {{ .pagination.Html }}

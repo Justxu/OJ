@@ -80,8 +80,13 @@ GET     /code/get-panic/:id                     Code.GetPanic
 GET     /code/check/:id                         Code.Check
 
 # User 
-GET 	/User/U/:id				                User.ProfileVisit
+GET 	/user/u/:id				                User.ProfileVisit
 GET     /user/profile                           User.Profile
+
+GET     /user/rating                            User.Rating
+GET     /user/rating/:index                     User.Rating
+
+GET     /user/solved                            User.Solved
 
 # Notice
 GET     /notice/crash                           Notice.Crash
