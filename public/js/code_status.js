@@ -1,12 +1,9 @@
 $(function(){
     $('.status').click(function(){
         var code_id = $(this).siblings().first().children().first().html().slice(1);
-        console.log(code_id);
-        var data = {};
 		$('.loader').removeClass('disable');
 		$('.loader').addClass('active');
-        data.id = code_id;
-        $.getJSON("/Code/GetPanic",data,function(data,textStatus,jqXHR){
+        $.getJSON("/code/get-panic/"+code_id,function(data,textStatus,jqXHR){
             if(data.status){
                 var panic = data.panic;
                 $('#check').empty(); 
@@ -23,12 +20,9 @@ $(function(){
     });
 	$('.view').click(function(){
 		var code_id = $(this).siblings().first().children().first().html().slice(1);
-		console.log(code_id);
-		var data = {};
-		data.id = code_id;
 		$('.loader').removeClass('disable');
 		$('.loader').addClass('active');
-		$.getJSON("/Code/View",data,function(data,textStatus,jqXHR){
+		$.getJSON("/code/view/"+code_id,function(data,textStatus,jqXHR){
 			if(data.status){
 				var view = data.code;
 				console.log(view);
@@ -52,12 +46,9 @@ $(function(){
 	});
 	$('.id').click(function(){
 		var code_id = $(this).children().first().html().slice(1);
-		console.log("code is "+code_id);
-		var data ={};
-		data.id = code_id;
 		$('.loader').removeClass('disable');
 		$('.loader').addClass('active');
-		$.getJSON("/Code/Check",data,function(data,textStatus,jqXHR){
+		$.getJSON("/code/check/"+code_id,function(data,textStatus,jqXHR){
 			if(data.status){
 				console.log(data.report);
 				tests = data.report.Tests

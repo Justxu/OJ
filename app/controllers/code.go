@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	"log"
 	"time"
 
 	"github.com/ggaaooppeenngg/OJ/app/models"
@@ -9,6 +9,14 @@ import (
 
 	"github.com/ggaaooppeenngg/util"
 	"github.com/revel/revel"
+)
+
+const (
+	ERROR  = "error"
+	PANIC  = "panic"
+	CODE   = "code"
+	STATUS = "status"
+	REPORT = "report"
 )
 
 type Code struct {
@@ -22,14 +30,13 @@ func (c *Code) Answer(id int64) revel.Result {
 }
 
 func (c *Code) Submit(code string, problemId int64, lang string) revel.Result {
-	fmt.Println("submit")
 	source := &models.Source{}
 	path := source.GenPath()
 	source.CreatedAt = time.Now()
 	source.Status = models.UnHandled
 	source.ProblemId = problemId
 	//get user id
-	username := c.Session["username"]
+	username := c.Session[USERNAME]
 	u := models.GetCurrentUser(username)
 	if u != nil {
 		source.UserId = u.Id
@@ -41,7 +48,7 @@ func (c *Code) Submit(code string, problemId int64, lang string) revel.Result {
 	case "c":
 		_, err := util.WriteFile(path+"/tmp.c", []byte(code))
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 		source.Lang = models.C
 	case "cpp":
@@ -60,7 +67,7 @@ func (c *Code) Submit(code string, problemId int64, lang string) revel.Result {
 		return c.Redirect(routes.Code.Answer(problemId))
 	}
 	c.Flash.Success(username + " 提交成功")
-	return c.Redirect(routes.Code.Status(0))
+	return c.Redirect("/code/status")
 }
 
 func (c *Code) Status(index int64) revel.Result {
@@ -74,76 +81,96 @@ func (c *Code) Status(index int64) revel.Result {
 		c.Validation.Keep()
 		return c.Redirect(routes.Notice.Crash())
 	}
-	err := engine.Desc("created_at").Asc("id").Limit(perPage, perPage*(pagination.current-1)).Find(&sources)
+	err := engine.Desc("created_at").
+		Asc("id").
+		Limit(perPage, perPage*(pagination.current-1)).
+		Find(&sources)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
-	err = pagination.Page(perPage, c.Request.Request.URL.Path)
+	err = pagination.Page(models.Source{},
+		perPage,
+		"/code/status",
+		index)
 	if err != nil {
 		c.Flash.Error("pagination error")
 		c.Redirect(routes.Notice.Crash())
 	}
-	moreScripts = append(moreStyles, "js/prettify.js", "js/code_status.js")
+	moreScripts = append(moreStyles,
+		"js/prettify.js",
+		"js/code_status.js")
 	moreStyles = append(moreStyles, "css/prettify.css")
 	return c.Render(moreStyles, moreScripts, sources, pagination)
 }
 
+//json render
+
 //get source code
 func (c *Code) View(id int64) revel.Result {
 	s := models.Source{}
-	has, _ := engine.Id(id).Get(&s)
+	has, err := engine.Id(id).Get(&s)
+	if err != nil {
+		log.Println(err)
+	}
 	data := make(map[string]interface{})
 	if !has {
-		data["status"] = false
-		data["error"] = "not exits"
+		data[STATUS] = false
+		data[ERROR] = "not exits"
 		return c.RenderJson(data)
 	}
 	code, err := s.View()
 	if err != nil {
-		data["status"] = false
-		data["error"] = err.Error()
+		data[STATUS] = false
+		data[ERROR] = err.Error()
 	}
-	data["status"] = true
-	data["code"] = code
+	data[STATUS] = true
+	data[CODE] = code
 	return c.RenderJson(data)
 }
 
 //get panic error of the code
 func (c *Code) GetPanic(id int64) revel.Result {
 	s := new(models.Source)
-	has, _ := engine.Id(id).Get(s)
+	has, err := engine.Id(id).Get(s)
+	if err != nil {
+		log.Println(err)
+	}
 	data := make(map[string]interface{})
 	if !has {
-		data["status"] = false
-		data["error"] = "not exist!"
+		data[ERROR] = "not exist!"
+		data[STATUS] = false
 	} else {
-		data["panic"] = s.PanicError
-		data["status"] = true
+		data[PANIC] = s.PanicError
+		data[STATUS] = true
 	}
 	return c.RenderJson(data)
 }
 
+// check the output
 func (c *Code) Check(id int64) revel.Result {
 	s := models.Source{}
-	has, _ := engine.Id(id).Get(&s)
+	has, err := engine.Id(id).Get(&s)
+	if err != nil {
+		log.Println(err)
+	}
 	data := make(map[string]interface{})
 	if !has {
-		data["status"] = false
-		data["error"] = "not exist!"
+		data[STATUS] = false
+		data[ERROR] = "not exist!"
 		return c.RenderJson(data)
 	}
 	r, e := s.Check()
 	if e != nil || s.Status != models.WrongAnswer {
-		data["status"] = false
+		data[STATUS] = false
 		if e != nil {
-			data["error"] = e.Error()
+			data[ERROR] = e.Error()
 		} else {
-			data["error"] = "not wrong answer"
+			data[ERROR] = "not wrong answer"
 		}
 		return c.RenderJson(data)
 	} else {
-		data["status"] = true
-		data["report"] = r
+		data[STATUS] = true
+		data[REPORT] = r
 		return c.RenderJson(data)
 	}
 }

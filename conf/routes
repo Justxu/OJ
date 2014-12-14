@@ -5,7 +5,7 @@
 module:testrunner
 #module:jobs
 
-GET     /                                       Problems.Index
+GET     /                                       Problem.Index
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
@@ -13,18 +13,78 @@ GET     /favicon.ico                            404
 # Map static resources from the /app/public folder to the /public path
 GET     /public/*filepath                       Static.Serve("public")
 
-#POST 	/Problems/PostNew 			Problems.PostNew
-GET	/problems/answer/:id 			Code.Answer
-GET 	/Problems/Edit/:id			Problems.Edit
+#POST 	/Problems/PostNew 			            Problems.PostNew
+GET     /problem/set                            Problem.Index
+GET     /problem/p/:index                       Problem.Index
+
+GET     /problem/posts                          Problem.Posts
+GET     /problem/posts/p/:index                 Problem.Posts
+
+GET     /problem/admit/:id                     Problem.Admit
+POST    /problem/new                            Problem.PostNew
+GET     /problem/new                            Problem.New
+
+GET     /problem/delete/:id                     Problem.Delete
+GET     /problem/edit/:id                       Problem.Edit
+POST    /problem/edit                           Problem.PostEdit
+# Problem Index
+GET   	/problem/:id                            Problem.P
 # Account management
-GET     /Account/Reset/:resetcode		Account.Reset
-GET     /Account/Activate/:activecode 		Account.Activate
+
+
+#   登陆界面,登陆请求
+GET     /account/login                          Account.Login
+POST    /account/login                          Account.PostLogin
+#   remove session
+#   登出操作
+GET     /account/logout                         Account.Logout
+#   register
+#   注册过程
+GET     /account/register                       Account.Register
+POST    /account/register                       Account.PostRegister
+#   错误显示
+#   Notice page , render flash error
+GET     /account/notice                         Account.Notice
+#   忘记密码页面
+#   forgot password page
+GET     /account/forgot                         Account.Forgot
+#   发送重置邮件
+POST    /account/send-reset-email        Account.SendResetEmail
+
+#   点击重置邮件到达重置页面,检查重置号码
+GET     /account/reset/:resetcode               Account.Reset
+#   提交重置结果 
+POST    /account/reset                          Account.PostReset
+
+GET     /account/edit                           Account.Edit
+POST    /account/edit                           Account.PostEdit
+#重新发送激活码
+GET     /account/resent-active-code             Account.ResentActiveCode
+#激活账号
+GET     /account/activate/:activecode           Account.Activate
+
+
+# Code Router
+#  Code Status
+GET     /code/status/p/:index                   Code.Status 
+GET     /code/status/                           Code.Status
+
+GET     /code/answer/:id                        Code.Answer
+POST    /code/submit                            Code.Submit
+
+#  json render
+GET     /code/view/:id                          Code.View
+#  get panic result 
+GET     /code/get-panic/:id                     Code.GetPanic
+#  check code output
+GET     /code/check/:id                         Code.Check
 
 # User 
-GET 	/User/U/:id				User.ProfileVisit
+GET 	/User/U/:id				                User.ProfileVisit
+GET     /user/profile                           User.Profile
 
-# Problem Index
-GET   	/Problem/P/:index 			Problems.P
+# Notice
+GET     /notice/crash                           Notice.Crash
 
 # Catch all
-*       /:controller/:action                    :controller.:action
+#*       /:controller/:action                    :controller.:action

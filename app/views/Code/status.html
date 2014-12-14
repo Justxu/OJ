@@ -40,7 +40,7 @@
 	<tr>
 		<td class="id"><a href="javascript:void(0)">#{{$s.Id}}</a></td>
 		<td>{{ $s.CreatedTime }}</td>
-		<td><a href="/User/U/{{$s.UserId}}">{{ $s.GetUserName }}</a></td>
+		<td><a href="/user/u/{{$s.UserId}}">{{ $s.GetUserName }}</a></td>
 		<td>{{ $s.GetProblemTitle }}</td>
 		<td class="view" ><a href="javascript:void(0)">{{ $s.LangString }}</a></td>
 		{{ with $status := $s.StatusString}}

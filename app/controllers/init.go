@@ -26,14 +26,14 @@ func GetStmp() SmtpConfig {
 
 func initTemplateFunc() {
 	revel.TemplateFuncs["isAdmin"] = IsAdmin
-	revel.TemplateFuncs["Text"] = Text
+	revel.TemplateFuncs["text"] = Text
 }
 
 func initIntercepter() {
-	revel.InterceptMethod(CheckLogin, revel.BEFORE)
+	revel.InterceptMethod(authenticate, revel.BEFORE)
 }
 
-func init() {
+func initConfig() {
 	engine = models.Engine()
 	c, err := config.ReadDefault("conf/misc.conf")
 	if err != nil {
@@ -59,7 +59,10 @@ func init() {
 	if appAddr == "" || appPort == "" {
 		panic("init fail,can not get address and port from conf/misc.conf")
 	}
+}
+
+func init() {
+	initConfig()
 	initIntercepter()
 	initTemplateFunc()
-
 }

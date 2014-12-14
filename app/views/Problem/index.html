@@ -2,8 +2,8 @@
 {{template "header.html" .}}
 {{template "sub_header.html" .}}
 <div class="ui sub menu">
-	<a class="active item" >SET</a>
-	<a class="item" href="/Code/Status" >STATUS</a>
+	<a class="active item" href="/problem/set" >SET</a>
+	<a class="item" href="/code/status" >STATUS</a>
 </div>
  </div>
 </div>
@@ -14,13 +14,11 @@
 	{{range $k,$v:= .problems}}
 	<div class="item">
 		<div class="right floated ui label">
-			<i class="user icon"></i>
-            <a class="detail" href="/User/U/{{$v.PosterId}}">{{$v.Poster}}</a>
+			<i class="checkmark icon"></i>
+			<a class="detail" href="#">{{$v.Solved}}</a>
 		</div>
 		<div class="content">
-			<a class="header" href="/Problem/P/{{$v.Id}}" >{{$v.Title}}</a>
-            <a class="ui small red button" href="/Problems/Delete?id={{$v.Id}}">delete</a>
-            <a class="ui small green button" href="/Problems/Admit?id={{$v.Id}}">admit</a>
+			<a class="header" href="/problem/{{$v.Id}}" >{{$v.Title}}</a>
 		</div>
 	</div>
 	{{end}}

@@ -12,24 +12,24 @@
         <p>TIME LIMIT  <span class="ui red tag label large">{{.prob.TimeLimit}}</span></p>
         <p>MEMORY LIMIT <span class="ui purple tag label large">{{.prob.MemoryLimit}}</span></p>
 	</div>
-	{{Text .prob.Description}}
+	{{text .prob.Description}}
     <div class="ui divider"></div>
     <div class="ui inverted green segment">
 	<p class="inverted">Input Sample</p>
     </div>
-	{{Text .prob.InputSample}}
+	{{text .prob.InputSample}}
     <div class="ui divider"></div>
     <div class="ui inverted blue segment">
 	<p>Output Sample</p>
     </div>
-	{{Text .prob.OutputSample}}
+	{{text .prob.OutputSample}}
 </div>
 	{{if .session.username }}
-	<a class="ui button" href="/problems/answer/{{.prob.Id}}">submit</a>
+	<a class="ui button" href="/code/answer/{{.prob.Id}}">submit</a>
 	{{end}}
 	{{if isAdmin .session.username}}
-	<a class="ui button" href="/Problems/Edit/{{.prob.Id}}">edit</a>
-	<a class="ui red button" href="/Problems/Delete?id={{.prob.Id}}">delete</a>
+	<a class="ui button" href="/problem/edit/{{.prob.Id}}">edit</a>
+	<a class="ui red button" href="/problem/delete/{{.prob.Id}}">delete</a>
 	{{end}}
 	</div>
 </div>

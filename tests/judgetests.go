@@ -13,8 +13,8 @@ type JudegeTest struct {
 
 func (t *JudegeTest) TestCLangAPlusB() {
 	c := judge.Judge("c", "tests/test/A1/src", "tests/test/A1/src/input", "tests/test/A1/src/output", 1000, 10000)
-	t.Assert(c.Status != models.PanicError)
-	t.AssertEqual(models.Accept, c)
+
+	t.AssertEqual(models.Accept, c.Status)
 	c = judge.Judge("go", "tests/test/A1/src", "tests/test/A1/src/input", "tests/test/A1/src/output", 1000, 10000)
 	t.AssertEqual(models.Accept, c.Status)
 }

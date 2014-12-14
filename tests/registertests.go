@@ -20,11 +20,10 @@ func (t *RegisterTest) Before() {
 	t.Client = &http.Client{
 		Jar: cookieJar,
 	}
-	println("Set up")
 }
 
 func (t *RegisterTest) TestRegisterPageWorks() {
-	t.Get("/Account/Login/")
+	t.Get("/account/login/")
 	t.AssertOk()
 	t.AssertContentType("text/html; charset=utf-8")
 }
@@ -38,7 +37,7 @@ func (t *RegisterTest) TestRegisterPostWorks() {
 		"user.Password":        []string{"testtest"},
 		"user.ConfirmPassword": []string{"testtest"},
 	}
-	t.PostForm("/Account/PostRegist", form)
+	t.PostForm("/account/postregister", form)
 	user.Email = "test@test.com"
 	has, _ := engine.Get(&user)
 	t.Assert(has)
@@ -53,12 +52,12 @@ func (t *RegisterTest) TestActiveCode() {
 		"user.Password":        []string{"testtest"},
 		"user.ConfirmPassword": []string{"testtest"},
 	}
-	t.PostForm("/Account/PostRegist", form)
+	t.PostForm("/account/register", form)
 	has, err := engine.Where("email =?", "test@test.com").Get(&user)
 	t.Assert(err == nil)
 	t.Assert(has)
 	t.Assert(user.ActiveCode != "")
-	t.Get("/Account/Activate/" + user.ActiveCode)
+	t.Get("/account/activate/" + user.ActiveCode)
 	fmt.Println(user.Id)
 	user = models.User{}
 	has, err = engine.Where("email =?", "test@test.com").Get(&user)
@@ -77,31 +76,31 @@ func (t *RegisterTest) TestResetCode() {
 		"user.Password":        []string{"testtest"},
 		"user.ConfirmPassword": []string{"testtest"},
 	}
-	t.PostForm("/Account/PostRegist", form)
+	t.PostForm("/account/register", form)
 	has, err := engine.Where("email =?", "test@test.com").Get(&user)
 	t.Assert(err == nil)
 	t.Assert(has)
 	username := t.Session["username"]
 	t.AssertEqual("testName", username)
-	t.Get("/Account/Logout")
+	t.Get("/account/logout")
 	username, has = t.Session["username"]
 	t.Assert(!has)
 	form = url.Values{
 		"email": []string{"test@test.com"},
 	}
-	t.PostForm("/Account/SendResetEmail", form)
+	t.PostForm("/account/send-reset-email", form)
 	user = models.User{}
 	has, _ = engine.Where("email =?", "test@test.com").Get(&user)
 	t.Assert(has)
 	t.Assert(user.ResetCode != "")
-	t.Get("/Account/Reset/" + user.ResetCode)
+	t.Get("/account/reset/" + user.ResetCode)
 	username = t.Session["username"]
 	t.AssertEqual("testName", username)
 	form = url.Values{
 		"user.Password":        []string{"123"},
 		"user.ConfirmPassword": []string{"123"},
 	}
-	t.PostForm("/Account/PostReset", form)
+	t.PostForm("/account/reset", form)
 	user = models.User{}
 	has, _ = engine.Where("email =?", "test@test.com").Get(&user)
 	t.Assert(has)

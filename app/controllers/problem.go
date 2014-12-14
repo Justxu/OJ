@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"fmt"
+	"log"
 	"path"
-	"regexp"
 	"strconv"
 
 	"github.com/ggaaooppeenngg/OJ/app/models"
@@ -14,38 +14,39 @@ import (
 )
 
 const (
+	ID      = "id"
 	perPage = 5
 )
 
-type Problems struct {
+type Problem struct {
 	*revel.Controller
 }
 
-var (
-	urlMatch *regexp.Regexp
-)
-
-func validPicture(url string) bool {
-	return true
-}
-
-//URL: prolem/Index/index,get problem information
-func (p *Problems) Index(index int64) revel.Result {
+//GET problem/p/:index,get problem information
+func (p *Problem) Index(index int64) revel.Result {
 	var problems []models.Problem
 	pagination := &Pagination{}
 	pagination.isValidPage(p.Validation, models.Problem{}, index)
+
 	if p.Validation.HasErrors() {
 		p.FlashParams()
 		p.Validation.Keep()
 		return p.Redirect(routes.Notice.Crash())
 	}
 
-	err := engine.Asc("id").Where("is_valid = ?", true).Limit(perPage, perPage*(pagination.current-1)).Find(&problems)
+	err := engine.Asc(ID).
+		Where("is_valid = ?", true).
+		Limit(perPage, perPage*(pagination.current-1)).
+		Find(&problems)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
-	err = pagination.Page(perPage, p.Request.Request.URL.Path)
+	err = pagination.Page(models.Problem{},
+		perPage,
+		p.Request.Request.URL.Path,
+		index)
+
 	if err != nil {
 		p.Flash.Error(err.Error())
 		p.Redirect(routes.Notice.Crash())
@@ -53,88 +54,103 @@ func (p *Problems) Index(index int64) revel.Result {
 	return p.Render(problems, pagination)
 }
 
-//URL: prolem/p/id,get problem information
-func (p *Problems) P(index int) revel.Result {
-	p.Validation.Min(index, 0).Message("worong problem index")
+//GET problem/:i,get problem information
+func (p *Problem) P(id int) revel.Result {
+	p.Validation.Min(id, 0).Message("worong problem i")
 	if p.Validation.HasErrors() {
-		p.FlashParams()
+		//把参数存到Flash里面方便debug
+		//p.FlashParams()
 		p.Validation.Keep()
-		return p.Redirect(routes.Problems.Index(0))
+		return p.Redirect("/")
 	}
 	var prob models.Problem
-	has, err := engine.Id(index).Get(&prob)
+	has, err := engine.
+		Id(id).
+		Get(&prob)
+
 	if err != nil || !has || !prob.IsValid {
-		fmt.Println(err)
-		p.Flash.Error("problem id error %d", index)
-		p.Redirect(routes.Problems.Index(0))
+		log.Println(err)
+		p.Flash.Error("problem id error %d", id)
+		p.Redirect("/")
 	}
-	//markdown script
+	//markdown plugin script
 	var moreScripts []string
 	moreScripts = append(moreScripts, "js/marked.js")
 	return p.Render(prob, moreScripts)
 }
 
-func (p *Problems) PostNew(problem models.Problem, inputTest, outputTest []byte) revel.Result {
-	p.Validation.Required(problem.Title).Message("Title Required")
-	p.Validation.Min(int(problem.MemoryLimit), 1).Message("TimeLimit Required")
-	p.Validation.Min(int(problem.TimeLimit), 1).Message("MemoryLimit Required")
-	p.Validation.Required(problem.Description).Message("Description Required")
-	p.Validation.Required(outputTest).Message("output file needed")
-	p.Validation.Required(inputTest).Message("input file needed")
-	p.Validation.MaxSize(problem.InputSample, 512).Message("input sample too long")
-	p.Validation.MaxSize(problem.OutputSample, 512).Message("output sample too long")
+//POST /problem/new
+func (p *Problem) PostNew(problem models.Problem,
+	inputTest, outputTest []byte) revel.Result {
 
-	path := problem.TestPath()
-	problem.InputTestPath = path + "/inputTest"
-	problem.OutputTestPath = path + "/outputTest"
+	problem.Validate(p.Validation, inputTest, outputTest)
 	if p.Validation.HasErrors() {
 		p.Validation.Keep()
-		p.FlashParams()
-		return p.Redirect(routes.Problems.Index(0))
+		//p.FlashParams()
+		return p.Redirect("/")
 	}
-	if IsAdmin(p.Session["username"]) {
+	if IsAdmin(p.Session[USERNAME]) {
 		problem.IsValid = true
 	} else {
-		//if user is not admin,checked the problem effectiveness manually by administrators
+		//if user is not admin,checked
+		//the problem effectiveness manually by administrators
+		has, id := models.GetUserId(p.Session[USERNAME])
+		if has {
+			problem.PosterId = id
+		}
 		problem.IsValid = false
 	}
 	_, err := util.WriteFile(problem.InputTestPath, inputTest)
 	if err != nil {
-		fmt.Println(err)
+		p.Flash.Error(err.Error())
+		log.Println(err)
+		return p.Redirect(routes.Notice.Crash())
 	}
 	_, err = util.WriteFile(problem.OutputTestPath, outputTest)
 	if err != nil {
-		fmt.Println(err)
+		p.Flash.Error(err.Error())
+		log.Println(err)
+		return p.Redirect(routes.Notice.Crash())
 	}
 	_, err = engine.Insert(&problem)
 	if err != nil {
-		fmt.Print(err)
+		p.Flash.Error("insert error")
+		log.Println(err)
+		return p.Redirect(routes.Notice.Crash())
 	}
-	return p.Redirect(routes.Problems.Index(0))
+	p.Flash.Success("post success!")
+	return p.Redirect("/")
 }
 
 //list unchecked users' problem posts
-func (p *Problems) Posts(index int64) revel.Result {
+//GET /problem/posts/p/:index
+func (p *Problem) Posts(index int64) revel.Result {
 	var problems []models.Problem
 	pagination := &Pagination{}
 	pagination.isValidPage(p.Validation, models.Problem{}, index)
 	if p.Validation.HasErrors() {
-		p.FlashParams()
+		//p.FlashParams()
 		p.Validation.Keep()
 		return p.Redirect(routes.Notice.Crash())
 	}
-	err := engine.Asc("id").Where("is_valid = ?", false).Limit(perPage, perPage*(pagination.current-1)).Find(&problems)
+	err := engine.Asc(ID).
+		Where("is_valid = ?", false).
+		Limit(perPage, perPage*(pagination.current-1)).
+		Find(&problems)
 	if err != nil {
 		fmt.Println(err)
 	}
-	err = pagination.Page(perPage, p.Request.Request.URL.Path)
+	err = pagination.Page(models.Problem{}, perPage,
+		p.Request.Request.URL.Path, index)
 	if err != nil {
 		p.Flash.Error(err.Error())
 		return p.Redirect(routes.Notice.Crash())
 	}
 	return p.Render(problems)
 }
-func (p *Problems) Admit(id int64) revel.Result {
+
+//GET /problem/admin/:id , make problem valid
+func (p *Problem) Admit(id int64) revel.Result {
 	problem := &models.Problem{Id: id}
 	problem.IsValid = true
 	_, err := engine.Cols("is_valid").Update(problem)
@@ -142,64 +158,77 @@ func (p *Problems) Admit(id int64) revel.Result {
 		p.Flash.Error(err.Error())
 		return p.Redirect(routes.Notice.Crash())
 	}
-	return p.Redirect(routes.Problems.Index(0))
+	return p.Redirect("/")
 }
 
-func (p *Problems) New() revel.Result {
+func (p *Problem) New() revel.Result {
 	return p.Render()
 }
 
-func (p *Problems) Delete(id int64) revel.Result {
+// GET /problem/delete/:id
+func (p *Problem) Delete(id int64) revel.Result {
 	problem := &models.Problem{Id: id}
-	_, err := engine.Delete(problem)
+	has, err := engine.Get(problem)
+	if !has {
+		p.Flash.Error("problem invalid")
+		return p.Redirect(routes.Notice.Crash())
+	}
 	if err != nil {
 		p.Flash.Error(err.Error())
 		return p.Redirect(routes.Notice.Crash())
 	}
-	return p.Redirect(routes.Problems.Index(0))
+	err = problem.Delete()
+	if err != nil {
+		p.Flash.Error(err.Error())
+		return p.Redirect(routes.Notice.Crash())
+	}
+	return p.Redirect("/")
 }
 
-func (p *Problems) Edit(id int64) revel.Result {
+// GET /problem/edit/:id
+func (p *Problem) Edit(id int64) revel.Result {
 	problem := &models.Problem{Id: id}
-	engine.Id(problem.Id).Get(problem)
-	p.Session["id"] = strconv.Itoa(int(id))
-	fmt.Println("eidt id is", strconv.Itoa(int(id)))
+	has, err := engine.Id(problem.Id).Get(problem)
+	if err != nil || !has {
+		p.Flash.Error("no such problem")
+		return p.Redirect(routes.Notice.Crash())
+	}
+	p.Session[ID] = strconv.Itoa(int(id))
 	return p.Render(problem)
 }
 
-func (p *Problems) EditPost(problem models.Problem, inputTest, outputTest []byte) revel.Result {
+// POST /problem/edit
+func (p *Problem) PostEdit(problem models.Problem,
+	inputTest, outputTest []byte) revel.Result {
 	defer func() {
-		delete(p.Session, "id")
+		delete(p.Session, ID)
 	}()
 	if inputTest != nil {
-		problem.InputTestPath = path.Dir(problem.InputTestPath) + "/inputTest"
+		problem.InputTestPath = path.Dir(problem.InputTestPath) +
+			"/inputTest"
 		_, err := util.WriteFile(problem.InputTestPath, inputTest)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 
 	}
 	if outputTest != nil {
-		problem.OutputTestPath = path.Dir(problem.OutputTestPath) + "/outputTest"
+		problem.OutputTestPath = path.Dir(problem.OutputTestPath) +
+			"/outputTest"
 		_, err := util.WriteFile(problem.OutputTestPath, outputTest)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 	}
-	fmt.Println("update id is")
-	id, err := strconv.ParseInt(p.Session["id"], 10, 64)
+	id, err := strconv.ParseInt(p.Session[ID], 10, 64)
 	if err != nil {
 		p.Flash.Error("id error")
-		fmt.Println(err)
-		return p.Redirect(routes.Problems.Index(0))
+		log.Println(err)
+		return p.Redirect("/")
 	}
 	_, err = engine.Id(id).Update(problem)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
-	return p.Redirect(routes.Problems.P(int(id)))
-}
-
-func (p *Problems) Standings() revel.Result {
-	return p.Redirect(routes.Problems.Index(0))
+	return p.Redirect("/")
 }
