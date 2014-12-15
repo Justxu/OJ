@@ -8,9 +8,9 @@
 		<form method="POST" action="/account/reset">
 			<div class="ui form segment">
 				<div class="field">
-					<label>密码</label>
+                    <label>{{msg . "account.password"}}</label>
 					<div class="ui left labeled icon input">
-						<input type="password" name="user.Password" placeholder="Password">
+                        <input type="password" name="user.Password" placeholder="{{msg . "account.password"}}">
 						<i class="lock icon"></i>
 						<div class="ui corner label">
 							<i class="icon asterisk"></i>
@@ -18,16 +18,16 @@
 					</div>
 				</div>
 				<div class="field">
-					<label>确认密码</label>
+                    <label>{{msg . "account.password"}}</label>
 					<div class="ui left labeled icon input">
-						<input type="password" name="user.ConfirmPassword" placeholder="Confirm Password">
+                        <input type="password" name="user.ConfirmPassword" placeholder="{{msg . "account.password"}}">
 						<i class="lock icon"></i>
 						<div class="ui corner label">
 							<i class="icon asterisk"></i>
 						</div>
 					</div>
 				</div>
-				<button class="ui blue submit button">重置</button>
+                <button class="ui blue submit button">{{msg . "account.reset"}}</button>
 			</div>
 		</form>
 	</div>

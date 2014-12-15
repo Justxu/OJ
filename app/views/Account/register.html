@@ -10,9 +10,9 @@
 		<form method="POST" action="/account/register">
 			<div class="ui form segment">
 				<div class="field">
-					<label>用户名</label>
+                    <label>{{msg . "account.username"}}</label>
 					<div class="ui left labeled icon input">
-						<input type="text" name="user.Name" placeholder="User Name">
+                        <input type="text" name="user.Name" placeholder="{{msg . "account.username"}}">
 						<i class="user icon"></i>
 						<div class="ui corner label">
 							<i class="icon asterisk"></i>
@@ -20,9 +20,9 @@
 					</div>
 				</div>
 				<div class="field">
-					<label>邮箱</label>
+                    <label>{{msg . "account.email"}}</label>
 					<div class="ui left labeled icon input">
-						<input type="text" name="user.Email" placeholder="Email Address">
+                        <input type="text" name="user.Email" placeholder="{{msg . "account.email"}}">
 						<i class="mail icon"></i>
 						<div class="ui corner label">
 							<i class="icon asterisk"></i>
@@ -30,9 +30,9 @@
 					</div>
 				</div>
 				<div class="field">
-					<label>密码</label>
+                    <label>{{msg . "account.password"}}</label>
 					<div class="ui left labeled icon input">
-						<input type="password" name="user.Password" placeholder="Password">
+                        <input type="password" name="user.Password" placeholder="{{msg . "account.password"}}">
 						<i class="lock icon"></i>
 						<div class="ui corner label">
 							<i class="icon asterisk"></i>
@@ -40,19 +40,16 @@
 					</div>
 				</div>
 				<div class="field">
-					<label>密码</label>
+                    <label>{{msg . "account.confirmpassword"}}</label>
 					<div class="ui left labeled icon input">
-						<input type="password" name="user.ConfirmPassword" placeholder="Confirm Password">
+                        <input type="password" name="user.ConfirmPassword" placeholder="{{msg . "account.confirmpassword"}}">
 						<i class="lock icon"></i>
 						<div class="ui corner label">
 							<i class="icon asterisk"></i>
 						</div>
 					</div>
 				</div>
-				<div class="ui error message">
-					<div class="header">发生了错误</div>
-				</div>
-				<button class="ui blue submit button">注册</button>
+                <button class="ui blue submit button">{{msg . "register"}}</button>
 			</div>
 		</form>
 	</div>

@@ -10,21 +10,21 @@
 			<form action="/account/edit" method="POST">
 				<div class="ui small form segment">
 					<div class="field">
-						<label>Name</label>
+                        <label>{{msg . "account.username"}}</label>
 						<input placeholder="Name" type="text" name="user.Name" value="{{.username}}">
 					</div>
 					<div class="two fields">
 						<div class="field">
-							<label>Password</label>
-							<input placeholder="Password" type="password" name="user.Password">
+                            <label>{{msg . "account.password"}}</label>
+                            <input placeholder="{{msg . "account.password"}}" type="password" name="user.Password">
 						</div>
 						<div class="field">
-							<label>Comfirm Password</label>
-							<input placeholder="Confirm Password" type="password" name="user.ConfirmPassword">
+                            <label>{{msg . "account.confirmpassword"}}</label>
+                            <input placeholder="{{msg . "account.confirmpassword"}}" type="password" name="user.ConfirmPassword">
 						</div>
 					</div>
 				</div>
-				<button class="ui blue submit button">Submit</button>
+                <button class="ui blue submit button">{{msg . "submit"}}</button>
 			</form>
 		</div>
 	</div>

@@ -33,8 +33,17 @@ func (p *Problem) Index(index int64) revel.Result {
 		p.Validation.Keep()
 		return p.Redirect(routes.Notice.Crash())
 	}
+	err := pagination.Page(models.Problem{},
+		perPage,
+		"/problem",
+		index)
 
-	err := engine.Asc(ID).
+	if err != nil {
+		p.Flash.Error(err.Error())
+		p.Redirect(routes.Notice.Crash())
+	}
+
+	err = engine.Asc(ID).
 		Where("is_valid = ?", true).
 		Limit(perPage, perPage*(pagination.current-1)).
 		Find(&problems)
@@ -42,15 +51,6 @@ func (p *Problem) Index(index int64) revel.Result {
 		log.Println(err)
 	}
 
-	err = pagination.Page(models.Problem{},
-		perPage,
-		p.Request.Request.URL.Path,
-		index)
-
-	if err != nil {
-		p.Flash.Error(err.Error())
-		p.Redirect(routes.Notice.Crash())
-	}
 	return p.Render(problems, pagination)
 }
 

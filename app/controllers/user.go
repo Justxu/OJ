@@ -13,7 +13,7 @@ type User struct {
 	*revel.Controller
 }
 
-//URL: /user/rating/:index
+//URL: /user/rating/p/:index
 func (u *User) Rating(index int64) revel.Result {
 	var users []models.User
 	pagination := &Pagination{}
@@ -30,7 +30,7 @@ func (u *User) Rating(index int64) revel.Result {
 	if err != nil {
 		log.Println(err)
 	}
-	err = pagination.Page(models.User{}, perPage, u.Request.Request.URL.Path, index)
+	err = pagination.Page(models.User{}, perPage, "/user/rating", index)
 	if err != nil {
 		u.Flash.Error(err.Error())
 		u.Redirect(routes.Notice.Crash())

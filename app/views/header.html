@@ -21,19 +21,19 @@
 	<a href="/"><img class="left floated image logo " src="/public/images/logo.jpg"/></a>
 	<div class="ui right floated buttons">
 		{{if .session.username}}
-			<a class="ui small button" href="/problem/new">new</a>
+        <a class="ui small button" href="/problem/new">{{msg . "new"}}</a>
             {{if isAdmin .session.username}}
-			<a class="ui small button" href="/problem/posts">posts</a>
+            <a class="ui small button" href="/problem/posts">{{msg . "posts"}}</a>
             {{end}}
 		{{end}}
 		{{if eq .RunMode "dev"}}
-			<a class="ui small button" href="/@tests">tests</a>
+        <a class="ui small button" href="/@tests">{{msg . "tests"}}</a>
 		{{end}}
 		{{if .session.username }}
-			<a class="ui small blue button" href="/account/logout">logout</a>
+        <a class="ui small blue button" href="/account/logout">{{msg . "logout"}}</a>
 		{{else}}
-            <a class="ui small button" href="/account/register">register</a>
-			<a class="ui small blue button" href="/account/login">login</a>
+        <a class="ui small button" href="/account/register">{{msg . "register"}}</a>
+        <a class="ui small blue button" href="/account/login">{{msg . "login"}}</a>
 		{{end}}
 	</div>
 </div>

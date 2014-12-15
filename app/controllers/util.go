@@ -119,14 +119,14 @@ func (p *Pagination) Html() template.HTML {
 	linkFlag := "/p/"
 	if p.hasPrev {
 		html += fmt.Sprintf(`<a class="icon item" href="%s%s%d">`+
-			`<i class="icon left arrow"></i>PREV</a>`,
+			`<i class="icon left arrow"></i></a>`,
 			p.url, linkFlag, p.current-1)
 	}
 	html += fmt.Sprintf(`<div class="disabled item">%d/%d</div>`,
 		p.current, p.pages)
 	if p.hasNext {
 		html += fmt.Sprintf(`<a class="icon item" href="%s%s%d">`+
-			`NEXT<i class="icon right arrow"></i></a>`,
+			`<i class="icon right arrow"></i></a>`,
 			p.url, linkFlag, p.current+1)
 	}
 	html += `</div>`

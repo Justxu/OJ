@@ -84,7 +84,7 @@ GET 	/user/u/:id				                User.ProfileVisit
 GET     /user/profile                           User.Profile
 
 GET     /user/rating                            User.Rating
-GET     /user/rating/:index                     User.Rating
+GET     /user/rating/p/:index                   User.Rating
 
 GET     /user/solved                            User.Solved
 

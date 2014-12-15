@@ -13,15 +13,15 @@
 	<div class="ui page grid stackable relaxed feature segment">
 		<div class="row">
 			<div class="ten wide column">
-				<p>User {{.user.Name}}</p>
-				<p>Email  {{.user.Email}}</p>
+                <p>{{msg . "account.username"}} {{.user.Name}}</p>
+                <p>{{msg . "account.email"}} {{.user.Email}}</p>
 				{{if .session.username}}
-				<a class="ui primary button" href="/account/edit">Edit</a>
+                <a class="ui primary button" href="/account/edit">{{msg . "edit"}}</a>
 				{{end}}
 				<div class="ui inverted section divider"></div>
 				<div class="ui animated selection list">
 					<div class="item">
-						Solved	
+                        {{msg . "SOLVED" }}
 						<div class="right floated">{{.user.Solved}}</div>
 					</div>
 				</div>

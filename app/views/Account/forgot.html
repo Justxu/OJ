@@ -8,16 +8,16 @@
 		<form method="POST" action="/account/send-reset-email">
 			<div class="ui form segment">
 				<div class="field">
-					<label>注册邮箱</label>
+                    <label>{{msg . "account.email"}}</label>
 					<div class="ui left labeled icon input">
-						<input type="text" name="email" placeholder="Email Address">
+                        <input type="text" name="email" placeholder="{{msg . "account.email"}}">
 						<i class="user icon"></i>
 						<div class="ui corner label">
 							<i class="icon asterisk"></i>
 						</div>
 					</div>
 				</div>
-				<button class="ui blue submit button">重置</button>
+                <button class="ui blue submit button">{{msg . "account.reset"}}</button>
 			</div>
 		</form>
 	</div>

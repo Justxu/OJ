@@ -2,8 +2,8 @@
 {{template "header.html" .}}
 {{template "sub_header.html" .}}
 <div class="ui sub menu">
-	<a class="item" href="/">SET</a>
-	<a class="active item" href="#">STATUS</a>
+    <a class="item" href="/">{{msg . "SET"}}</a>
+    <a class="active item" href="#">{{msg . "STATUS"}}</a>
 </div>
 </div>
 </div>
@@ -26,13 +26,13 @@
 	<thead>
 		<tr>
 			<th>#</th>
-			<th>When</th>
-			<th>Who</th>
-			<th>Problem</th>
-			<th>Lang</th>
-			<th>Verdict</th>
-			<th>Memory</th>
-			<th>Time</th>
+            <th>{{msg . "status.when"}}</th>
+            <th>{{msg . "status.who"}}</th>
+            <th>{{msg . "status.problem"}}</th>
+            <th>{{msg . "status.lang"}}</th>
+            <th>{{msg . "status.verdict"}}</th>
+            <th>{{msg . "status.memory"}}</th>
+            <th>{{msg . "status.time"}}</th>
 		</tr>
 	</thead>
 	<tbody>

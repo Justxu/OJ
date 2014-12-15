@@ -2,13 +2,13 @@
 	{{if .session.username}}
 	<div class="ui vertical menu">
 		<a class=" item" href="/user/profile">
-			<i class="user icon"></i> PROFILE
+            <i class="user icon"></i> {{msg . "PROFILE"}}
 		</a>
 		<a class="item" href="/user/solved">
-			<i class="flag icon"></i> SOLVED
+            <i class="flag icon"></i> {{msg . "SOLVED"}}
 		</a>
 		<a class="item" >
-			<i class="move icon"></i> UNSOLVED
+            <i class="move icon"></i> {{msg . "UNSOLVED"}}
 		</a>
 	</div>
 	{{end}}

@@ -81,20 +81,21 @@ func (c *Code) Status(index int64) revel.Result {
 		c.Validation.Keep()
 		return c.Redirect(routes.Notice.Crash())
 	}
-	err := engine.Desc("created_at").
-		Asc("id").
-		Limit(perPage, perPage*(pagination.current-1)).
-		Find(&sources)
-	if err != nil {
-		log.Println(err)
-	}
-	err = pagination.Page(models.Source{},
+	log.Println(pagination.current)
+	err := pagination.Page(models.Source{},
 		perPage,
 		"/code/status",
 		index)
 	if err != nil {
 		c.Flash.Error("pagination error")
 		c.Redirect(routes.Notice.Crash())
+	}
+	err = engine.Desc("created_at").
+		Asc("id").
+		Limit(perPage, perPage*(pagination.current-1)).
+		Find(&sources)
+	if err != nil {
+		log.Println(err)
 	}
 	moreScripts = append(moreStyles,
 		"js/prettify.js",
