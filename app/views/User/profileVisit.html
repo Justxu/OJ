@@ -13,12 +13,12 @@
 				<p>User {{.user.Name}}</p>
 				<p>Email  {{.user.Email}}</p>
 				{{if eq .session.username .user.Name }}
-				<a class="ui primary button" href="/Account/Edit">Edit</a>
+                <a class="ui primary button" href="/Account/Edit">{{msg . "account.edit"}}</a>
 				{{end}}
 				<div class="ui inverted section divider"></div>
 				<div class="ui animated selection list">
 					<div class="item">
-						Solved	
+                        {{msg . "SOLVED" }}
 						<div class="right floated">{{.user.Solved}}</div>
 					</div>
 				</div>

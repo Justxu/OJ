@@ -2,7 +2,7 @@
 {{template "header.html" .}}
 {{template "sub_header.html" .}}
 <div class="ui sub menu">
-	<a class="active item" >PROFILE</a>
+    <a class="active item" >{{msg . "PROFILE"}}</a>
 </div>
 </div>
 </div>
@@ -16,7 +16,7 @@
                 <p>{{msg . "account.username"}} {{.user.Name}}</p>
                 <p>{{msg . "account.email"}} {{.user.Email}}</p>
 				{{if .session.username}}
-                <a class="ui primary button" href="/account/edit">{{msg . "edit"}}</a>
+                <a class="ui primary button" href="/account/edit">{{msg . "account.edit"}}</a>
 				{{end}}
 				<div class="ui inverted section divider"></div>
 				<div class="ui animated selection list">

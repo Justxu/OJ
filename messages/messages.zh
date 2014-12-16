@@ -23,7 +23,7 @@ account.password=密码
 account.confirmpassword=确认密码
 account.reset=重置
 account.forgot=忘记密码
-account.edit=edit
+account.edit=编辑
 
 code=code
 

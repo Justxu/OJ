@@ -23,6 +23,7 @@ account.password=password
 account.confirmpassword=confirm password
 account.reset=reset
 account.forgot=forgot
+account.edit=edit
 
 code=code
 
